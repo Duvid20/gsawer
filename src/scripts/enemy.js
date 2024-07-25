@@ -17,6 +17,10 @@ class Enemy {
   moveTowards(targetPosition) {
     // Logic to move enemy towards the player
   }
+
+  dropLoot() {
+    
+  }
 }
 
 class MeleeEnemy extends Enemy {
@@ -26,6 +30,10 @@ class MeleeEnemy extends Enemy {
 
   attack() {
     console.log("Melee attack");
+  }
+
+  die () {
+    
   }
 }
 

@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<!-- rechts unten in der Ecke des Bildschirms Overlay mit gerade gedrückten Tasten anzeigen mit Pfeilen in Bewegrichtung-->
+<!-- rechts unten in der Ecke des Bildschirms Overlay
+  mit gerade gedrückten Tasten anzeigen mit Pfeilen in Bewegrichtung ◀▶◁▷▲△▼▽◤◥◣◢◸◹◺◿△▲-->
 <!-- Schild einsetzen können -->
 <!-- Stamina verwenden, um kurz Beweggeschwindigkeit erhöhen -->
 <!-- Inventar -->

@@ -1,4 +1,5 @@
 import { Player } from "./player.js";
+import { ItemManager } from "./itemManager.js";
 
 class Game {
   constructor() {
@@ -7,6 +8,7 @@ class Game {
     this.crosshair_HTML = document.getElementById("crosshair");
 
     this.player;
+    this.itemManager = new ItemManager();
     this.gameRunning = false;
 
     this.spawnPadding = 50;
