@@ -1,0 +1,106 @@
+:root {
+  --d: 2px; /* Distance from the center of the gradient circle to the edge */
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+}
+
+.fit-content {
+  height: fit-content;
+  height: -moz-fit-content;
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
+  width: fit-content;
+  width: -moz-fit-content;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(
+      circle at var(--d) var(--d),
+      #71717a calc(var(--d) - 1px),
+      #09090b var(--d)
+    ) -2px -2px / 16px 16px;
+  font-family: druid-sans, sans-serif;
+}
+
+#start-game-button {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 100px;
+  background-color: black;
+  border: 1px solid white;
+  color: white;
+  font-size: 15px;
+  border-radius: 4px;
+}
+
+#player {
+  width: auto;
+  height: auto;
+  color: white;
+  position: absolute;
+}
+
+#player-weapon {
+  position: absolute;
+  color: white;
+}
+
+#player-appearence {
+  position: absolute;
+  color: white;
+}
+
+#game-container {
+  width: 100vw;
+  height: 100vh;
+}
+
+#crosshair {
+  display: none;
+  position: absolute;
+  color: white;
+}
+
+.projectile {
+  position: absolute;
+  background-color: red;
+  height: 2px;
+  width: 8px;
+}
+
+.enemy {
+  position: absolute;
+  background-color: red;
+  height: 16px;
+  width: 16px;
+}
+
+.enemy-weak {
+  border: 1px solid white;
+}
+
+.enemy-medium {
+  border: 1px solid grey;
+}
+
+.enemy-strong {
+  border: 1px solid black;
+}
