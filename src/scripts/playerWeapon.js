@@ -11,36 +11,31 @@ class PlayerWeapon {
   }
 
   updatePosition(game) {
-    // center of weapon on center of player
     const playerCenter = game.getCenterCoordinates("#player");
-    const weaponCenter = {
-      x: playerCenter.x - this.htmlElement.offsetWidth / 2,
-      y: playerCenter.y - this.htmlElement.offsetHeight / 2,
-    };
-
-    game.setCssPosition(this.htmlElement, weaponCenter.x, weaponCenter.y);
-
     const cursorPosition = game.cursorPosition;
-
-    // rotate weapon and offset it
     const angleToCursor = game.calculateAngle(
       playerCenter,
       cursorPosition,
       true
     );
 
-    const weaponX =
-      playerCenter.x +
-      this.offsetRadius * Math.cos(angleToCursor) -
-      window.scrollX;
-    const weaponY =
-      playerCenter.y +
-      this.offsetRadius * Math.sin(angleToCursor) -
-      window.scrollY;
+    // position weapon relative to player
+    const weaponPosition = {
+      x:
+        playerCenter.x +
+        this.offsetRadius * Math.cos(angleToCursor) -
+        this.htmlElement.offsetWidth / 2,
+      y:
+        playerCenter.y +
+        this.offsetRadius * Math.sin(angleToCursor) -
+        this.htmlElement.offsetHeight / 2,
+    };
 
-    game.setCssPosition(this.htmlElement, weaponX, weaponY);
-
+    // rotate weapon to face cursor
     const rotateAngle = angleToCursor * (180 / Math.PI);
+
+    // apply position and rotation to weapon
+    game.setCssPosition(this.htmlElement, weaponPosition.x, weaponPosition.y);
     game.setCssRotation(this.htmlElement, rotateAngle);
   }
 

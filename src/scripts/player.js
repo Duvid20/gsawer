@@ -4,7 +4,12 @@ class Player {
   constructor(game) {
     this.position = { x: 100, y: 100 };
     this.speed = 5;
-    this.appearence = "(._.)";
+    this.appearence = {
+      normal: "(._.)",
+      happy: "(^o^)",
+      collect: "($_$)",
+      damage: "(X_X)",
+    };
     this.health = 15;
     this.movement = {
       up: false,
@@ -13,7 +18,7 @@ class Player {
       right: false,
     };
     this.htmlElement = this.createHtmlElement(game);
-    this.weapon = new PlayerWeapon(game, 25);
+    this.weapon = new PlayerWeapon(game, 30);
 
     // player movement
     document.addEventListener("keydown", (event) =>
@@ -91,7 +96,7 @@ class Player {
       "div",
       "",
       "player-appearance",
-      this.appearence
+      this.appearence.normal
     );
 
     player.appendChild(playerInfos);

@@ -24,12 +24,8 @@ class Game {
         x: event.clientX,
         y: event.clientY,
       };
-      // crosshair movement
-      this.setCssPosition(
-        this.crosshair_HTML,
-        this.cursorPosition.x,
-        this.cursorPosition.y
-      );
+      // crosshair position
+      this.setCrosshairPosition();
     });
   }
 
@@ -109,6 +105,15 @@ class Game {
 
   setCssRotation(element, angle) {
     element.style.transform = `rotate(${angle}deg)`;
+  }
+
+  setCrosshairPosition() {
+    // center crosshair on cursor
+    this.setCssPosition(
+      this.crosshair_HTML,
+      this.cursorPosition.x - this.crosshair_HTML.offsetWidth / 2,
+      this.cursorPosition.y - this.crosshair_HTML.offsetHeight / 2
+    );
   }
 
   calculateAngle(a, b, inRadians) {
