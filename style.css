@@ -175,3 +175,8 @@ body {
   position: absolute;
   border-radius: 2px;
 }
+
+.coinDropped {
+  position: absolute;
+  color: white;
+}

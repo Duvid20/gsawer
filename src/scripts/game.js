@@ -62,6 +62,11 @@ class Game {
     // start spawning enemies after a delay
     setTimeout(() => new Enemy(this), 2000);
 
+    // testing: drop coin
+    this.itemManager.instantiateItem(this.itemManager.itemList.coin, {
+      x: 100,
+      y: 100,
+    });
     console.log("Game started");
   }
 
