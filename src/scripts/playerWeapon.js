@@ -43,7 +43,9 @@ class PlayerWeapon {
   }
 
   shoot(game) {
-    new Projectile(game);
+    if (!game.gamePaused && game.gameRunning) {
+      new Projectile(game, getCenterCoordinates("#player-weapon"));
+    }
   }
 
   createHtmlElement() {

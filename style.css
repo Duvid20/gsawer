@@ -91,6 +91,18 @@ body {
   font-weight: bold;
 }
 
+#pause-overlay {
+  color: white;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
 #player {
   width: auto;
   height: auto;

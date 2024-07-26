@@ -15,10 +15,12 @@ class Game {
     this.landingOverlay_HTML = document.getElementById("landing-overlay");
     this.gameContainer_HTML = document.getElementById("game-container");
     this.crosshair_HTML = document.getElementById("crosshair");
+    this.pauseOverlay_HTML = document.getElementById("pause-overlay");
 
     this.player;
     this.itemManager = new ItemManager();
     this.gameRunning = false;
+    this.gamePaused = false;
 
     this.spawnPadding = 50;
     this.enemyStopDistance = 50;
@@ -37,6 +39,12 @@ class Game {
       };
       // crosshair position
       this.setCrosshairPosition();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (this.gameRunning && event.key === "Escape") {
+        this.gamePaused ? this.unpause() : this.pause();
+      }
     });
   }
 
@@ -62,6 +70,25 @@ class Game {
     this.gameContainer_HTML.style.cursor = "pointer";
     this.gameRunning = false;
     console.log("Game ended");
+  }
+
+  pause() {
+    elementDisplayFlex(this.pauseOverlay_HTML);
+    elementDisplayNone(this.crosshair_HTML);
+    this.gameContainer_HTML.style.cursor = "pointer";
+
+    this.gamePaused = true;
+    console.log("Game paused");
+  }
+
+  unpause() {
+    elementDisplayNone(this.pauseOverlay_HTML);
+    elementDisplayBlock(this.crosshair_HTML);
+    this.gameContainer_HTML.style.cursor = "none";
+    this.player.updatePosition(this);
+
+    this.gamePaused = false;
+    console.log("Game unpaused");
   }
 
   updatePosition(element, velocity, conditionCallback) {

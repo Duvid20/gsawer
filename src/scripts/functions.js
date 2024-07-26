@@ -54,6 +54,21 @@ export function setCssPosition(element, x, y) {
   element.style.top = y + "px";
 }
 
+export function getCssPosition(element) {
+  return {
+    x: parseFloat(element.style.left),
+    y: parseFloat(element.style.top),
+  };
+}
+
 export function setCssRotation(element, angle) {
   element.style.transform = `rotate(${angle}deg)`;
+}
+
+export function calculateVelocity(angle, speed) {
+  const angleRadians = angle * (Math.PI / 180);
+  return {
+    x: Math.cos(angleRadians) * speed,
+    y: Math.sin(angleRadians) * speed,
+  };
 }
