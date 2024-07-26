@@ -2,6 +2,10 @@
   --d: 2px; /* Distance from the center of the gradient circle to the edge */
 }
 
+* {
+  font-family: "Courier New", Courier, monospace;
+}
+
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
@@ -35,10 +39,23 @@ body {
   font-family: druid-sans, sans-serif;
 }
 
-#start-game-button {
+#game-name {
+  color: white;
+  font-size: 90px;
+}
+
+#landing-overlay {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#start-game-button {
   display: flex;
   align-items: center;
   justify-content: center;

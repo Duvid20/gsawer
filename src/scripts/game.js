@@ -1,5 +1,6 @@
 import { Player } from "./player.js";
 import { ItemManager } from "./itemManager.js";
+import { Enemy } from "./enemy.js";
 import {
   elementDisplayNone,
   elementDisplayBlock,
@@ -11,6 +12,7 @@ import {
 class Game {
   constructor() {
     this.startGameButton_HTML = document.getElementById("start-game-button");
+    this.landingOverlay_HTML = document.getElementById("landing-overlay");
     this.gameContainer_HTML = document.getElementById("game-container");
     this.crosshair_HTML = document.getElementById("crosshair");
 
@@ -21,7 +23,6 @@ class Game {
     this.spawnPadding = 50;
     this.enemyStopDistance = 50;
     this.cursorPosition = getCenterOfScreen();
-    console.log(this.cursorPosition);
 
     this.startGameButton_HTML.addEventListener("click", () => this.start());
     console.log("Game initialized");
@@ -43,7 +44,7 @@ class Game {
     this.gameRunning = true;
     this.initEventListeners();
 
-    elementDisplayNone(this.startGameButton_HTML);
+    elementDisplayNone(this.landingOverlay_HTML);
     elementDisplayBlock(this.crosshair_HTML);
     this.gameContainer_HTML.style.cursor = "none";
     this.player = new Player(this);
@@ -51,13 +52,13 @@ class Game {
     this.setCrosshairPosition();
 
     // start spawning enemies after a delay
-    // setTimeout(() => this.spawnEnemy(), 2000);
+    setTimeout(() => new Enemy(this), 2000);
 
     console.log("Game started");
   }
 
   end() {
-    elementDisplayFlex(this.startGameButton_HTML);
+    elementDisplayFlex(this.landingOverlay_HTML);
     this.gameContainer_HTML.style.cursor = "pointer";
     this.gameRunning = false;
     console.log("Game ended");

@@ -11,13 +11,11 @@ class ItemManager {
         name: "coin",
         label: "Coin",
         symbol: this.symbols.coin,
-        value: 0,
       },
       energyDrink: {
         name: "energyDrink",
         label: "Energy Drink",
         symbol: this.symbols.energyDrink,
-        value: 1,
       },
     };
   }
