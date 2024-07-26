@@ -5,10 +5,10 @@
             <div class="game-name">GSAWER</div>
             <div class="game-name-decoration">⪔⨴⫏⫍⇁⌟</div>
         </div>
-        <button id="start-game-button">Play</button>
+        <button class="classic-look" id="start-game-button">Play</button>
     </div>
 
-    <div id="pause-overlay">
+    <div class="classic-look" id="pause-overlay">
         <div id="pause-header">Gsawer is paused</div>
         <div id="pause-stats">
             <div>0:12:34 played</div>
@@ -16,7 +16,7 @@
             <div>1.4km travelled</div>
             <div>199mg of caffeine in bloodstream</div>
         </div>
-        <div>press >Space to continue</div>
+        <div id="pause-footer">press >Esc to continue</div>
     </div>
 
     <div id=game-container>

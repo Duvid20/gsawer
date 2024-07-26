@@ -2,7 +2,6 @@ import {
   setCssPosition,
   setCssRotation,
   createElementWithClass,
-  getCenterCoordinates,
   calculateAngle,
   calculateVelocity,
 } from "./functions.js";

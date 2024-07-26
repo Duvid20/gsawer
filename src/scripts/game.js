@@ -85,10 +85,12 @@ class Game {
     elementDisplayNone(this.pauseOverlay_HTML);
     elementDisplayBlock(this.crosshair_HTML);
     this.gameContainer_HTML.style.cursor = "none";
-    this.player.updatePosition(this);
 
     this.gamePaused = false;
     console.log("Game unpaused");
+
+    // restart updatePosition loop
+    this.player.updatePosition(this);
   }
 
   updatePosition(element, velocity, conditionCallback) {

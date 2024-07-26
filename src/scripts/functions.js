@@ -65,6 +65,15 @@ export function setCssRotation(element, angle) {
   element.style.transform = `rotate(${angle}deg)`;
 }
 
+export function setCssSize(element, width, height) {
+  element.style.width = width + "px";
+  element.style.height = height + "px";
+}
+
+export function setCssBgColor(element, color) {
+  element.style.backgroundColor = color;
+}
+
 export function calculateVelocity(angle, speed) {
   const angleRadians = angle * (Math.PI / 180);
   return {

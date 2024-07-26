@@ -45,6 +45,13 @@ body {
   font-family: druid-sans, sans-serif;
 }
 
+.classic-look {
+  background-color: black;
+  border: 1px solid white;
+  border-radius: 4px;
+  color: white;
+}
+
 .game-logo {
   display: flex;
   flex-direction: row;
@@ -79,11 +86,7 @@ body {
   justify-content: center;
   height: 50px;
   width: 100px;
-  background-color: black;
-  border: 1px solid white;
-  color: white;
   font-size: 15px;
-  border-radius: 4px;
 }
 
 #start-game-button:hover {
@@ -94,13 +97,28 @@ body {
 #pause-overlay {
   color: white;
   position: fixed;
-  width: 100vw;
-  height: 100vh;
   display: none;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   gap: 20px;
+  background-color: black;
+  text-align: center;
+  white-space: nowrap;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  z-index: 1;
+}
+
+#pause-footer {
+  color: gray;
+  font-size: 13px;
+}
+
+#pause-header {
+  font-size: 25px;
 }
 
 #player {
@@ -145,14 +163,15 @@ body {
   width: 16px;
 }
 
-.enemy-weak {
+.health-bar-container {
+  position: absolute;
+  border-radius: 2px;
   border: 1px solid white;
+  display: flex;
+  justify-content: start;
 }
 
-.enemy-medium {
-  border: 1px solid grey;
-}
-
-.enemy-strong {
-  border: 1px solid black;
+.health-bar-progress {
+  position: absolute;
+  border-radius: 2px;
 }

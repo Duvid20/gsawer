@@ -1,4 +1,5 @@
 import { PlayerWeapon } from "./playerWeapon.js";
+import { HealthBar } from "./healthBar.js";
 import {
   getCenterOfScreen,
   setCssPosition,
@@ -15,7 +16,8 @@ class Player {
       collect: "($_$)",
       damage: "(X_X)",
     };
-    this.health = 15;
+    this.maxHealth = 100;
+    this.health = this.maxHealth;
     this.movement = {
       up: false,
       down: false,
@@ -24,15 +26,17 @@ class Player {
     };
     this.htmlElement = this.createHtmlElement(game);
     this.weapon = new PlayerWeapon(game, 30);
+    this.healthBar = new HealthBar(
+      this.maxHealth,
+      this.health,
+      this.htmlElement,
+      "green",
+      50,
+      true
+    );
 
     // player movement
-    document.addEventListener("keydown", (event) => {
-      this.handleKey(event, true);
-    });
-    document.addEventListener("keyup", (event) => {
-      this.handleKey(event, false);
-    });
-
+    this.initEventListeners();
     this.updatePosition(game);
   }
 
@@ -46,6 +50,15 @@ class Player {
       //update weapon position
       this.weapon.updatePosition(game);
     }
+  }
+
+  initEventListeners() {
+    document.addEventListener("keydown", (event) => {
+      this.handleKey(event, true);
+    });
+    document.addEventListener("keyup", (event) => {
+      this.handleKey(event, false);
+    });
   }
 
   calculatePosition(game) {
