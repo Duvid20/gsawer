@@ -4,6 +4,12 @@
 
 * {
   font-family: "Courier New", Courier, monospace;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
 }
 
 .noselect {
@@ -39,9 +45,21 @@ body {
   font-family: druid-sans, sans-serif;
 }
 
-#game-name {
+.game-logo {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.game-name {
   color: white;
   font-size: 90px;
+}
+
+.game-name-decoration {
+  font-size: 40px;
+  color: red;
 }
 
 #landing-overlay {
@@ -66,6 +84,11 @@ body {
   color: white;
   font-size: 15px;
   border-radius: 4px;
+}
+
+#start-game-button:hover {
+  border: 2px solid red;
+  font-weight: bold;
 }
 
 #player {
