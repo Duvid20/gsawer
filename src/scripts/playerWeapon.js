@@ -1,23 +1,26 @@
 import { Projectile } from "./projectile.js";
+import {
+  getCenterCoordinates,
+  calculateAngle,
+  setCssPosition,
+  setCssRotation,
+  createElementWithClass,
+} from "./functions.js";
 
 class PlayerWeapon {
   constructor(game, offsetRadius) {
     this.position = { x: 0, y: 0 };
     this.offsetRadius = offsetRadius;
     this.appearence = "-⟭›";
-    this.htmlElement = this.createHtmlElement(game);
+    this.htmlElement = this.createHtmlElement();
 
     document.addEventListener("click", () => this.shoot(game));
   }
 
   updatePosition(game) {
-    const playerCenter = game.getCenterCoordinates("#player");
+    const playerCenter = getCenterCoordinates("#player");
     const cursorPosition = game.cursorPosition;
-    const angleToCursor = game.calculateAngle(
-      playerCenter,
-      cursorPosition,
-      true
-    );
+    const angleToCursor = calculateAngle(playerCenter, cursorPosition, true);
 
     // position weapon relative to player
     const weaponPosition = {
@@ -35,22 +38,21 @@ class PlayerWeapon {
     const rotateAngle = angleToCursor * (180 / Math.PI);
 
     // apply position and rotation to weapon
-    game.setCssPosition(this.htmlElement, weaponPosition.x, weaponPosition.y);
-    game.setCssRotation(this.htmlElement, rotateAngle);
+    setCssPosition(this.htmlElement, weaponPosition.x, weaponPosition.y);
+    setCssRotation(this.htmlElement, rotateAngle);
   }
 
   shoot(game) {
     new Projectile(game);
   }
 
-  createHtmlElement(game) {
-    const playerWeapon = game.createElementWithClass(
+  createHtmlElement() {
+    const playerWeapon = createElementWithClass(
       "div",
       "fit-content",
       "player-weapon",
       this.appearence
     );
-
     document.getElementById("game-container").appendChild(playerWeapon);
     return playerWeapon;
   }

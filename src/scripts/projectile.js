@@ -1,3 +1,10 @@
+import {
+  setCssPosition,
+  createElementWithClass,
+  getCenterCoordinates,
+  calculateAngle,
+} from "./functions.js";
+
 class Projectile {
   constructor(game, event) {
     this.color = "red";
@@ -6,11 +13,11 @@ class Projectile {
   }
 
   createHTML(game) {
-    const projectile = game.createElementWithClass("div", "projectile");
-    let weaponPosition = game.getCenterCoordinates("#player-weapon");
-    let angle = game.calculateAngle(weaponPosition, game.cursorPosition, false);
+    const projectile = createElementWithClass("div", "projectile");
+    let weaponPosition = getCenterCoordinates("#player-weapon");
+    let angle = calculateAngle(weaponPosition, game.cursorPosition, false);
 
-    game.setCssPosition(projectile, weaponPosition.x, weaponPosition.y);
+    setCssPosition(projectile, weaponPosition.x, weaponPosition.y);
     projectile.style.transform = `rotate(${angle}deg)`;
 
     game.gameContainer_HTML.appendChild(projectile);

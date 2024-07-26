@@ -1,8 +1,13 @@
 import { PlayerWeapon } from "./playerWeapon.js";
+import {
+  getCenterOfScreen,
+  setCssPosition,
+  createElementWithClass,
+} from "./functions.js";
 
 class Player {
   constructor(game) {
-    this.position = { x: 100, y: 100 };
+    this.position = getCenterOfScreen();
     this.speed = 5;
     this.appearence = {
       normal: "(._.)",
@@ -31,7 +36,7 @@ class Player {
 
   updatePosition(game) {
     this.calculatePosition(game);
-    game.setCssPosition(this.htmlElement, this.position.x, this.position.y);
+    setCssPosition(this.htmlElement, this.position.x, this.position.y);
 
     requestAnimationFrame(() => this.updatePosition(game));
 
@@ -84,15 +89,15 @@ class Player {
   }
 
   createHtmlElement(game) {
-    const player = game.createElementWithClass("div", "noselect", "player");
-    const playerInfos = game.createElementWithClass("div", "", "player-infos");
-    const bulletCount = game.createElementWithClass("div", "bullet-count");
-    const playerHealth = game.createElementWithClass("div", "player-health");
+    const player = createElementWithClass("div", "noselect", "player");
+    const playerInfos = createElementWithClass("div", "", "player-infos");
+    const bulletCount = createElementWithClass("div", "bullet-count");
+    const playerHealth = createElementWithClass("div", "player-health");
 
     playerInfos.appendChild(bulletCount);
     playerInfos.appendChild(playerHealth);
 
-    const playerAppearance = game.createElementWithClass(
+    const playerAppearance = createElementWithClass(
       "div",
       "",
       "player-appearance",
@@ -102,7 +107,7 @@ class Player {
     player.appendChild(playerInfos);
     player.appendChild(playerAppearance);
 
-    document.getElementById("game-container").appendChild(player);
+    game.gameContainer_HTML.appendChild(player);
 
     return player;
   }

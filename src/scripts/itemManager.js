@@ -25,10 +25,10 @@ class ItemManager {
   useItem(item) {
     switch (item.name) {
       case "coin":
-        console.log("Coin used");
+        console.log(coin.label + " used");
         break;
       case "energyDrink":
-        console.log("Energy Drink used");
+        console.log(energyDrink.label + " used");
         break;
       default:
         console.log("Item not recognized");
