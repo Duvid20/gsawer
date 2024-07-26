@@ -177,6 +177,11 @@ body {
 }
 
 .coinDropped {
+  color: gold;
+  text-shadow: 1px 1px 1px yellow;
+}
+
+.droppedItem {
   position: absolute;
-  color: white;
+  font-size: 22px;
 }

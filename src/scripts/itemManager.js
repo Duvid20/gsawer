@@ -47,10 +47,14 @@ class ItemManager {
 
     // add item to dropped list
     this.items.dropped.push(item);
+    this.instantiateItem(item, position);
   }
 
   instantiateItem(item, position) {
-    const itemElement = createElementWithClass("div", item.cssClassDropped);
+    const itemElement = createElementWithClass(
+      "div",
+      item.cssClassDropped + " droppedItem"
+    );
     itemElement.innerHTML = item.symbol;
 
     document.getElementById("game-container").appendChild(itemElement);

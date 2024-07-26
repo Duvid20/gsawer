@@ -63,10 +63,14 @@ class Game {
     setTimeout(() => new Enemy(this), 2000);
 
     // testing: drop coin
-    this.itemManager.instantiateItem(this.itemManager.itemList.coin, {
-      x: 100,
-      y: 100,
-    });
+    this.itemManager.dropItem(
+      this.itemManager.itemList.coin,
+      {
+        x: 100,
+        y: 100,
+      },
+      false
+    );
     console.log("Game started");
   }
 
