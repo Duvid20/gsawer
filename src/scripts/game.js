@@ -1,6 +1,7 @@
 import { Player } from "./player.js";
 import { ItemManager } from "./itemManager.js";
 import { Enemy } from "./enemy.js";
+import { Coin } from "./items/item.js";
 import {
   elementDisplayNone,
   elementDisplayBlock,
@@ -63,14 +64,7 @@ class Game {
     setTimeout(() => new Enemy(this), 2000);
 
     // testing: drop coin
-    this.itemManager.dropItem(
-      this.itemManager.itemList.coin,
-      {
-        x: 100,
-        y: 100,
-      },
-      false
-    );
+    this.itemManager.addToDropped(new Coin().drop(), 1, false);
     console.log("Game started");
   }
 
