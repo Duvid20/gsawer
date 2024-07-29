@@ -1,30 +1,41 @@
-import { createElementWithClass, setCssPosition } from "./functions.js";
+import {
+  createElementWithClass,
+  setCssPosition,
+  getRandomInt,
+} from "./functions.js";
 import { Coin, EnergyDrink } from "./items/item.js";
 
 class ItemManager {
   constructor() {
     this.items = { dropped: [], inventory: [] };
+    this.dropRadius = 13;
   }
+
   // public methods
+  collectDroppedItem(item) {
+    this.removeFromDropped(item, 1);
+    this.addToInventory(item, 1);
+    console.log(`${item.constructor.name} collected`);
+  }
 
   collectCoin(amount) {
     this.addToInventory(new Coin(), amount);
-    console.log("Coin collected");
+    console.log(`${amount} Coin(s) collected`);
   }
 
-  dropCoin(position, fromInventory) {
-    this.dropItem(new Coin(), position, fromInventory);
-    console.log("Coin dropped");
+  dropCoins(position, fromInventory, amount) {
+    this.dropItems(new Coin(), position, fromInventory, amount);
+    console.log(`${amount} Coin(s) dropped`);
   }
 
   collectEnergyDrink(amount) {
     this.addToInventory(new EnergyDrink(), amount);
-    console.log("Energy Drink collected");
+    console.log(`${amount} Energy Drink(s) collected`);
   }
 
-  dropEnergyDrink(position, fromInventory) {
-    this.dropItem(new EnergyDrink(), position, fromInventory);
-    console.log("Energy Drink dropped");
+  dropEnergyDrinks(position, fromInventory, amount) {
+    this.dropItems(new EnergyDrink(), position, fromInventory, amount);
+    console.log(`${amount} Energy Drink(s) dropped`);
   }
 
   // private methods
@@ -68,15 +79,30 @@ class ItemManager {
     );
     itemElement.innerHTML = item.symbol;
     document.getElementById("game-container").appendChild(itemElement);
-    setCssPosition(itemElement, position.x, position.y);
+
+    const randomPosition = this.randomDropPosition(position);
+
+    setCssPosition(itemElement, randomPosition.x, randomPosition.y);
   }
 
-  dropItem(item, position, fromInventory) {
+  dropItems(item, position, fromInventory, amount) {
     if (fromInventory) {
-      this.removeFromInventory(item, 1);
+      this.removeFromInventory(item, amount);
     }
-    this.addToDropped(item);
-    this.instantiateItem(item, position);
+
+    for (let i = 0; i < amount; i++) {
+      this.addToDropped(item);
+      this.instantiateItem(item, position);
+    }
+  }
+
+  randomDropPosition(position) {
+    const random = {
+      x: position.x + getRandomInt(-this.dropRadius, this.dropRadius),
+      y: position.y + getRandomInt(-this.dropRadius, this.dropRadius),
+    };
+
+    return random;
   }
 }
 

@@ -14,7 +14,7 @@ class Item {
 
 class Coin extends Item {
   constructor() {
-    super("coin", "Coin", "©", "coinDropped", "coinInventory");
+    super("coin", "Coin", "©", "coin-dopped", "coin-inventory");
   }
 }
 
@@ -24,8 +24,8 @@ class EnergyDrink extends Item {
       "energyDrink",
       "Energy Drink",
       "▯",
-      "energyDrinkDropped",
-      "energyDrinkInventory"
+      "energy-drink-dropped",
+      "energy-drink-inventory"
     );
   }
 }

@@ -10,6 +10,7 @@ class Player {
   constructor(game) {
     this.position = getCenterOfScreen();
     this.speed = 5;
+    this.collectionRadius = 50;
     this.appearence = {
       normal: "(._.)",
       happy: "(^o^)",
@@ -44,6 +45,9 @@ class Player {
     if (!game.gamePaused && game.gameRunning) {
       this.calculatePosition(game);
       setCssPosition(this.htmlElement, this.position.x, this.position.y);
+
+      // check for items within collection radius
+      this.collectItemsWithinRadius(game.itemManager);
 
       requestAnimationFrame(() => this.updatePosition(game));
 
@@ -154,6 +158,28 @@ class Player {
       velocity.y = (velocity.y / length) * this.speed;
     }
     return velocity;
+  }
+
+  collectItemsWithinRadius(itemManager) {
+    const items = itemManager.items.dropped;
+    items.forEach((item) => {
+      const itemElements = document.querySelectorAll(
+        `.${item.cssClassDropped}`
+      );
+      itemElements.forEach((itemElement) => {
+        const itemPosition = itemElement.getBoundingClientRect();
+        const playerPosition = this.htmlElement.getBoundingClientRect();
+        const distance = Math.sqrt(
+          Math.pow(itemPosition.x - playerPosition.x, 2) +
+            Math.pow(itemPosition.y - playerPosition.y, 2)
+        );
+
+        if (distance <= this.collectionRadius) {
+          itemManager.collectDroppedItem(item);
+          itemElement.remove(); // Remove the item element from the DOM
+        }
+      });
+    });
   }
 }
 

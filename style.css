@@ -176,18 +176,49 @@ body {
   border-radius: 2px;
 }
 
-.coinDropped {
+.coin-dropped {
   color: gold;
   text-shadow: 1px 1px 1px yellow;
 }
 
-.energyDrinkDropped {
-  display: flex;
+.coin-inventory {
+  color: gold;
+  text-shadow: 1px 1px 1px yellow;
+}
+
+.energy-drink-dropped {
   color: green;
   text-shadow: 1px 1px 1px lime;
 }
 
-.droppedItem {
+.energy-drink-inventory {
+  color: green;
+  text-shadow: 1px 1px 1px lime;
+}
+
+.dropped-item {
   position: absolute;
   font-size: 22px;
+}
+
+.item-inventory {
+  border: 1px solid white;
+}
+
+#inventory {
+  position: fixed;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border: 1px solid white;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.inventory-item {
+  display: flex;
+  border: 1px solid white;
 }

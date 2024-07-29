@@ -1,7 +1,7 @@
 import { Player } from "./player.js";
 import { ItemManager } from "./itemManager.js";
+import { Inventory } from "./inventory.js";
 import { Enemy } from "./enemy.js";
-import { Coin } from "./items/item.js";
 import {
   elementDisplayNone,
   elementDisplayBlock,
@@ -18,10 +18,15 @@ class Game {
     this.crosshair_HTML = document.getElementById("crosshair");
     this.pauseOverlay_HTML = document.getElementById("pause-overlay");
 
+    this.inventoryKey = "e";
+    this.pauseKey = "Escape";
+
     this.player;
     this.itemManager = new ItemManager();
-    this.gameRunning = false;
-    this.gamePaused = false;
+    this.inventory = new Inventory();
+    this.gameRunning = false; // has player pressed start button
+    this.gamePaused = false; // did player pause game with pause key while game running
+    this.pauseOverlayOpened = false;
 
     this.spawnPadding = 50;
     this.enemyStopDistance = 50;
@@ -43,8 +48,17 @@ class Game {
     });
 
     document.addEventListener("keydown", (event) => {
-      if (this.gameRunning && event.key === "Escape") {
-        this.gamePaused ? this.unpause() : this.pause();
+      // toggle pausing
+      if (this.gameRunning && event.key === this.pauseKey) {
+        if (this.pauseOverlayOpened) {
+          this.unpause();
+          elementDisplayNone(this.pauseOverlay_HTML);
+        } else {
+          this.pause();
+          elementDisplayFlex(this.pauseOverlay_HTML);
+        }
+
+        this.pauseOverlayOpened = !this.pauseOverlayOpened;
       }
     });
   }
@@ -65,8 +79,8 @@ class Game {
 
     // testing: drop coin
     this.itemManager.collectCoin(1);
-    this.itemManager.dropEnergyDrink({ x: 200, y: 200 });
-    this.itemManager.dropCoin({ x: 250, y: 230 });
+    this.itemManager.dropEnergyDrinks({ x: 200, y: 200 }, false, 3);
+    this.itemManager.dropCoins({ x: 250, y: 230 }, false, 2);
     console.log("Game started");
   }
 
@@ -78,7 +92,6 @@ class Game {
   }
 
   pause() {
-    elementDisplayFlex(this.pauseOverlay_HTML);
     elementDisplayNone(this.crosshair_HTML);
     this.gameContainer_HTML.style.cursor = "pointer";
 
@@ -87,7 +100,6 @@ class Game {
   }
 
   unpause() {
-    elementDisplayNone(this.pauseOverlay_HTML);
     elementDisplayBlock(this.crosshair_HTML);
     this.gameContainer_HTML.style.cursor = "none";
 
