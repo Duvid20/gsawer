@@ -181,6 +181,12 @@ body {
   text-shadow: 1px 1px 1px yellow;
 }
 
+.energyDrinkDropped {
+  display: flex;
+  color: green;
+  text-shadow: 1px 1px 1px lime;
+}
+
 .droppedItem {
   position: absolute;
   font-size: 22px;

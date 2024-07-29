@@ -64,7 +64,9 @@ class Game {
     setTimeout(() => new Enemy(this), 2000);
 
     // testing: drop coin
-    this.itemManager.addToDropped(new Coin().drop(), 1, false);
+    this.itemManager.collectCoin(1);
+    this.itemManager.dropEnergyDrink({ x: 200, y: 200 });
+    this.itemManager.dropCoin({ x: 250, y: 230 });
     console.log("Game started");
   }
 
