@@ -75,7 +75,7 @@ class ItemManager {
   instantiateItem(item, position) {
     const itemElement = createElementWithClass(
       "div",
-      `${item.cssClassDropped} droppedItem`
+      `${item.cssClassDropped} dropped-item`
     );
     itemElement.innerHTML = item.symbol;
     document.getElementById("game-container").appendChild(itemElement);

@@ -14,7 +14,7 @@ class Item {
 
 class Coin extends Item {
   constructor() {
-    super("coin", "Coin", "©", "coin-dopped", "coin-inventory");
+    super("coin", "Coin", "©", "coin-dropped", "coin-inventory");
   }
 }
 
@@ -27,6 +27,11 @@ class EnergyDrink extends Item {
       "energy-drink-dropped",
       "energy-drink-inventory"
     );
+  }
+
+  use() {
+    console.log("Energy Drink used");
+    // shoot faster for certain amount of time
   }
 }
 

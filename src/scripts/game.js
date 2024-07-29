@@ -49,7 +49,11 @@ class Game {
 
     document.addEventListener("keydown", (event) => {
       // toggle pausing
-      if (this.gameRunning && event.key === this.pauseKey) {
+      if (
+        this.gameRunning &&
+        !this.inventory.inventoryOpened &&
+        event.key === this.pauseKey
+      ) {
         if (this.pauseOverlayOpened) {
           this.unpause();
           elementDisplayNone(this.pauseOverlay_HTML);
@@ -59,6 +63,14 @@ class Game {
         }
 
         this.pauseOverlayOpened = !this.pauseOverlayOpened;
+      }
+
+      if (
+        this.gameRunning &&
+        !this.pauseOverlayOpened &&
+        event.key === this.inventoryKey
+      ) {
+        this.inventory.toggle(this);
       }
     });
   }
@@ -93,7 +105,7 @@ class Game {
 
   pause() {
     elementDisplayNone(this.crosshair_HTML);
-    this.gameContainer_HTML.style.cursor = "pointer";
+    this.gameContainer_HTML.style.cursor = "default";
 
     this.gamePaused = true;
     console.log("Game paused");

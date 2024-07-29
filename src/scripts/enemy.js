@@ -1,23 +1,25 @@
 class Enemy {
   constructor(game) {
-    this.drops = game.itemManager.itemList;
-
-    this.types = {
-      melee: { health: 10, speed: 2, damage: 1, drops: [this.drops.coin] },
-      ranged: {
-        health: 20,
-        speed: 1,
-        damage: 2,
-        drops: [this.drops.coin, this.drops.energyDrink],
-      },
-    };
-
-    this.htmlElement = this.createHtmlElement();
-    this.type = "melee";
-    this.health = this.types[this.type].health;
-    this.speed = this.types[this.type].speed;
-    this.damage = this.types[this.type].damage;
-    this.position = { x: 100, y: 200 };
+    // this.types = {
+    //   melee: {
+    //     health: 10,
+    //     speed: 2,
+    //     damage: 1,
+    //     drops: [game.itemManager.itemList.coin],
+    //   },
+    //   ranged: {
+    //     health: 20,
+    //     speed: 1,
+    //     damage: 2,
+    //     drops: [game.itemManager.itemList.coin, game.itemManager.energyDrink],
+    //   },
+    // };
+    // this.htmlElement = this.createHtmlElement();
+    // this.type = "melee";
+    // this.health = this.types[this.type].health;
+    // this.speed = this.types[this.type].speed;
+    // this.damage = this.types[this.type].damage;
+    // this.position = { x: 100, y: 200 };
   }
 
   createHtmlElement() {
