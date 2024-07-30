@@ -1,15 +1,14 @@
 import {
   createElementWithClass,
-  getCssPosition,
   setCssPosition,
   setCssSize,
+  getCenterCoordinates,
 } from "./functions.js";
 
 class MovingRoundArea {
-  constructor(parent, radius, offset, cssClass) {
-    this.parent = parent; // object to follow
+  constructor(parentSelector, radius, cssClass) {
+    this.parentSelector = parentSelector;
     this.radius = radius;
-    this.offset = offset; // offset from parent position
     this.cssClass = cssClass;
     this.htmlElement = this.createHtmlElement();
   }
@@ -21,21 +20,21 @@ class MovingRoundArea {
   }
 
   update() {
-    console.log("MovingRoundArea update");
-    console.log("Parent Position:", this.parent.position);
-    console.log("Offset:", this.offset);
-
     const radiusDiameter = this.radius * 2;
-    const parentPosition = getCssPosition(this.parent.htmlElement);
-    const newPosition = {
-      x: parentPosition.x - this.offset.x,
-      y: parentPosition.y - this.offset.y,
-    };
-
-    console.log("New Position:", newPosition);
+    const newPosition = this.calcNewPosition();
 
     setCssSize(this.htmlElement, radiusDiameter, radiusDiameter);
     setCssPosition(this.htmlElement, newPosition.x, newPosition.y);
+  }
+
+  calcNewPosition() {
+    const parentCenter = getCenterCoordinates(this.parentSelector);
+    const newPosition = {
+      x: parentCenter.x - this.radius,
+      y: parentCenter.y - this.radius,
+    };
+
+    return newPosition;
   }
 }
 

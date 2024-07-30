@@ -38,15 +38,12 @@ export function createElementWithClass(type, className, id, textContent) {
 
 export function getCenterCoordinates(selector) {
   const element = document.querySelector(selector);
-  if (element) {
-    const rect = element.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
-    return { x, y };
-  } else {
-    console.error("Element not found, selector:", selector);
-    return null;
-  }
+  const rect = element.getBoundingClientRect();
+
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  
+  return { x, y };
 }
 
 export function setCssPosition(element, x, y) {

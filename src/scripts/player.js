@@ -5,7 +5,7 @@ import {
   getCenterOfScreen,
   setCssPosition,
   createElementWithClass,
-  calcOffsetOfCenter,
+  getCenterCoordinates,
 } from "./functions.js";
 
 class Player {
@@ -38,9 +38,8 @@ class Player {
       true
     );
     this.collectionRadiusArea = new MovingRoundArea(
-      this,
+      "#player",
       this.collectionRadius,
-      calcOffsetOfCenter("#player"),
       "player-collection-radius"
     );
 
@@ -53,16 +52,9 @@ class Player {
     if (!game.gamePaused && game.gameRunning) {
       this.calculatePosition(game);
       setCssPosition(this.htmlElement, this.position.x, this.position.y);
-
-      // check for items within collection radius
       this.collectItemsWithinRadius(game.itemManager);
-
       requestAnimationFrame(() => this.updatePosition(game));
-
-      //update weapon position
       this.weapon.updatePosition(game);
-
-      // update collection radius position
       this.collectionRadiusArea.update();
     }
   }
@@ -173,20 +165,25 @@ class Player {
 
   collectItemsWithinRadius(itemManager) {
     const items = itemManager.items.dropped;
+    const playerCenter = getCenterCoordinates("#player");
+
     items.forEach((item) => {
       const itemElements = document.querySelectorAll(
         `.${item.cssClassDropped}`
       );
       itemElements.forEach((itemElement) => {
-        const itemPosition = itemElement.getBoundingClientRect();
-        const playerPosition = this.htmlElement.getBoundingClientRect();
+        const itemRect = itemElement.getBoundingClientRect();
+        const itemCenter = {
+          x: itemRect.left + itemRect.width / 2,
+          y: itemRect.top + itemRect.height / 2,
+        };
+
         const distance = Math.sqrt(
-          Math.pow(itemPosition.x - playerPosition.x, 2) +
-            Math.pow(itemPosition.y - playerPosition.y, 2)
+          Math.pow(itemCenter.x - playerCenter.x, 2) +
+            Math.pow(itemCenter.y - playerCenter.y, 2)
         );
 
-        if (distance <= this.collectionRadius) {
-          // Use the radius value
+        if (distance <= this.collectionRadius + 5) {
           itemManager.collectDroppedItem(item);
           itemElement.remove();
         }
