@@ -63,7 +63,7 @@ class Player {
       this.weapon.updatePosition(game);
 
       // update collection radius position
-      this.collectionRadius.update();
+      this.collectionRadiusArea.update();
     }
   }
 
@@ -185,7 +185,7 @@ class Player {
             Math.pow(itemPosition.y - playerPosition.y, 2)
         );
 
-        if (distance <= this.collectionRadius.radius) {
+        if (distance <= this.collectionRadius) {
           // Use the radius value
           itemManager.collectDroppedItem(item);
           itemElement.remove();
