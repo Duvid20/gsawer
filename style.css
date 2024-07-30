@@ -236,8 +236,8 @@ body {
 
 .player-collection-radius {
   position: absolute;
-  border: 1px solid white; /* Blue border with transparency */
+  border: 2px solid white; /* Blue border with transparency */
   border-radius: 50%; /* Make it a circle */
   pointer-events: none; /* Allow clicks to pass through */
-  opacity: 0.3;
+  opacity: 0.15;
 }

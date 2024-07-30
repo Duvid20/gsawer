@@ -1,7 +1,6 @@
 import { Player } from "./player.js";
 import { ItemManager } from "./itemManager.js";
 import { Inventory } from "./inventory.js";
-import { Enemy } from "./enemy.js";
 import {
   elementDisplayNone,
   elementDisplayBlock,
@@ -22,6 +21,7 @@ class Game {
     this.pauseKey = "Escape";
 
     this.player;
+    this.enemies = [];
     this.itemManager = new ItemManager();
     this.inventory = new Inventory();
     this.gameRunning = false; // has player pressed start button
@@ -86,13 +86,11 @@ class Game {
 
     this.setCrosshairPosition();
 
-    // start spawning enemies after a delay
-    setTimeout(() => new Enemy(this), 2000);
-
-    // testing: drop coin
+    // testing
     this.itemManager.collectCoin(1);
     this.itemManager.dropEnergyDrinks({ x: 200, y: 200 }, false, 3);
     this.itemManager.dropCoins({ x: 250, y: 230 }, false, 2);
+
     console.log("Game started");
   }
 
@@ -100,6 +98,7 @@ class Game {
     elementDisplayFlex(this.landingOverlay_HTML);
     this.gameContainer_HTML.style.cursor = "pointer";
     this.gameRunning = false;
+
     console.log("Game ended");
   }
 

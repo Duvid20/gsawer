@@ -1,32 +1,29 @@
+import { createElementWithClass, getCenterCoordinates } from "./functions.js";
+
 class Enemy {
-  constructor(game) {
-    // this.types = {
-    //   melee: {
-    //     health: 10,
-    //     speed: 2,
-    //     damage: 1,
-    //     drops: [game.itemManager.itemList.coin],
-    //   },
-    //   ranged: {
-    //     health: 20,
-    //     speed: 1,
-    //     damage: 2,
-    //     drops: [game.itemManager.itemList.coin, game.itemManager.energyDrink],
-    //   },
-    // };
-    // this.htmlElement = this.createHtmlElement();
-    // this.type = "melee";
-    // this.health = this.types[this.type].health;
-    // this.speed = this.types[this.type].speed;
-    // this.damage = this.types[this.type].damage;
-    // this.position = { x: 100, y: 200 };
+  constructor(game, id) {
+    this.game = game;
+    this.htmlElement = this.createHtmlElement();
+    this.health = 0;
+    this.speed = 0;
+    this.damage = 0;
+    this.position = { x: 0, y: 0 };
+    this.cssClass = "";
+
+    this.moveLoop();
   }
 
   createHtmlElement() {
-    const enemy = document.createElement("div");
-    enemy.classList.add("enemy");
-    document.getElementById("game-container").appendChild(enemy);
-    return enemy;
+    const element = createElementWithClass("div", "enemy");
+    document.getElementById("game-container").appendChild(element);
+    return element;
+  }
+
+  moveLoop() {
+    if (this.game.gameRunning && !this.game.gamePaused) {
+      this.updatePosition();
+      requestAnimationFrame(() => this.moveLoop());
+    }
   }
 
   takeDamage(amount) {
@@ -35,15 +32,17 @@ class Enemy {
   }
 
   die() {
-    console.log(`${this.type} enemy died`);
+    // Handle enemy death
+    console.log("Enemy died");
   }
 
-  moveTowards(targetPosition, stopDistance) {
-    const dx = targetPosition.x - this.position.x;
-    const dy = targetPosition.y - this.position.y;
+  moveTowards(targetPosition) {
+    const position = getCenterCoordinates(".enemy"); // Ensure this selector is correct
+    const dx = targetPosition.x - position.x;
+    const dy = targetPosition.y - position.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
-    if (distance > stopDistance) {
+    if (distance > this.stopDistance) {
       const velocity = {
         x: (dx / distance) * this.speed,
         y: (dy / distance) * this.speed,
@@ -54,18 +53,43 @@ class Enemy {
     }
   }
 
-  updatePosition(game, playerPosition, stopDistance) {
-    const velocity = this.moveTowards(playerPosition, stopDistance);
-    game.updatePosition(this.htmlElement, velocity, () => {
-      const dx = playerPosition.x - this.position.x;
-      const dy = playerPosition.y - this.position.y;
-      return Math.sqrt(dx * dx + dy * dy) > stopDistance;
-    });
+  updatePosition() {
+    const targetPosition = this.game.player.position;
+    const enemyElement = document.querySelector(".enemy");
+    if (enemyElement) {
+      const velocity = this.moveTowards(targetPosition);
+      this.position.x += velocity.x;
+      this.position.y += velocity.y;
+      // Update HTML element position
+    } else {
+      console.error("Enemy element not found in the DOM");
+    }
   }
 
   dropLoot() {
-    // Logic to drop loot
+    // Handle loot dropping
+    console.log("Loot dropped");
   }
 }
 
-export { Enemy };
+class Melee extends Enemy {
+  constructor(game) {
+    super(game);
+    this.health = 10;
+    this.speed = 2;
+    this.damage = 1;
+    this.drops = ["coin"];
+  }
+}
+
+class Ranged extends Enemy {
+  constructor(game) {
+    super(game);
+    this.health = 5;
+    this.speed = 1;
+    this.damage = 2;
+    this.drops = ["energyDrink"];
+  }
+}
+
+export { Enemy, Melee, Ranged };

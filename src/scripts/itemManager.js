@@ -3,7 +3,7 @@ import {
   setCssPosition,
   getRandomInt,
 } from "./functions.js";
-import { Coin, EnergyDrink } from "./items/item.js";
+import { Coin, EnergyDrink } from "./item.js";
 
 class ItemManager {
   constructor() {
