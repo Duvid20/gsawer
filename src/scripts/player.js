@@ -1,9 +1,11 @@
 import { PlayerWeapon } from "./playerWeapon.js";
 import { HealthBar } from "./healthBar.js";
+import { MovingRoundArea } from "./movingRoundArea.js";
 import {
   getCenterOfScreen,
   setCssPosition,
   createElementWithClass,
+  calcOffsetOfCenter,
 } from "./functions.js";
 
 class Player {
@@ -32,8 +34,14 @@ class Player {
       this.health,
       this.htmlElement,
       "green",
-      50,
+      this.collectionRadius,
       true
+    );
+    this.collectionRadiusArea = new MovingRoundArea(
+      this,
+      this.collectionRadius,
+      calcOffsetOfCenter("#player"),
+      "player-collection-radius"
     );
 
     // player movement
@@ -53,6 +61,9 @@ class Player {
 
       //update weapon position
       this.weapon.updatePosition(game);
+
+      // update collection radius position
+      this.collectionRadius.update();
     }
   }
 
@@ -174,9 +185,10 @@ class Player {
             Math.pow(itemPosition.y - playerPosition.y, 2)
         );
 
-        if (distance <= this.collectionRadius) {
+        if (distance <= this.collectionRadius.radius) {
+          // Use the radius value
           itemManager.collectDroppedItem(item);
-          itemElement.remove(); // Remove the item element from the DOM
+          itemElement.remove();
         }
       });
     });

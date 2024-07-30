@@ -44,7 +44,7 @@ export function getCenterCoordinates(selector) {
     const y = rect.top + rect.height / 2;
     return { x, y };
   } else {
-    console.error("Element not found");
+    console.error("Element not found, selector:", selector);
     return null;
   }
 }
@@ -86,4 +86,22 @@ export function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function calcOffsetOfCenter(selector) {
+  const element = document.querySelector(selector);
+  if (!element) {
+    console.error(`Element with id "${selector}" not found`);
+    return null;
+  }
+  const centerPosition = getCenterCoordinates(selector);
+  const rect = element.getBoundingClientRect();
+
+  const elementPos = { x: rect.left, y: rect.top };
+  const offset = {
+    x: centerPosition.x - elementPos.x,
+    y: centerPosition.y - elementPos.y,
+  };
+
+  return offset;
 }
