@@ -1,5 +1,5 @@
 :root {
-  --d: 2px; /* Distance from the center of the gradient circle to the edge */
+  --d: px; /* Distance from the center of the gradient circle to the edge */
 }
 
 * {
