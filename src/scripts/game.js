@@ -96,7 +96,7 @@ class Game {
     // testing
     this.itemManager.createItems(Coin, { x: 34, y: 230 }, 3, false);
 
-    this.enemyManager.spawnMelee(3, { x: 10, y: 24 });
+    this.enemyManager.spawnMelee(7, { x: 10, y: 24 });
     this.enemyManager.spawnRanged(2, { x: 45, y: 76 });
 
     console.log("Game started");

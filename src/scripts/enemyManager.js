@@ -5,9 +5,26 @@ class EnemyManager {
   constructor(game) {
     this.game = game;
     this.enemies = [];
-    this.spawnInterval = 1000;
+    this.spawnInterval = 5000;
     this.spawnRadius = 40;
-    // this.spawnLoop();
+    this.spawnLoop();
+    this.enemiesSpawned = 0;
+  }
+
+  randomSpawnPositionOnScreenBorder() {
+    const randomPosition = {
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+    };
+    return randomPosition;
+  }
+
+  spawnLoop() {
+    setInterval(() => {
+      const position = this.randomSpawnPositionOnScreenBorder();
+      this.spawnMelee(1, position);
+      this.spawnRanged(1, position);
+    }, this.spawnInterval);
   }
 
   spawnMelee(amount, position) {
@@ -23,6 +40,7 @@ class EnemyManager {
       const randomPosition = randomPositionInArea(position, this.spawnRadius);
       const enemy = new type(this.game, randomPosition);
       this.enemies.push(enemy);
+      this.enemiesSpawned++;
     }
   }
 
