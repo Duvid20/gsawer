@@ -21,9 +21,11 @@ class EnemyManager {
 
   spawnLoop() {
     setInterval(() => {
-      const position = this.randomSpawnPositionOnScreenBorder();
-      this.spawnMelee(1, position);
-      this.spawnRanged(1, position);
+      if (!this.game.gamePaused && this.game.gameRunning) {
+        const position = this.randomSpawnPositionOnScreenBorder();
+        this.spawnMelee(1, position);
+        this.spawnRanged(1, position);
+      }
     }, this.spawnInterval);
   }
 
