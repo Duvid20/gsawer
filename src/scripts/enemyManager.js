@@ -1,10 +1,12 @@
 import { Melee, Ranged } from "./enemy.js";
+import { randomPositionInArea } from "./functions.js";
 
 class EnemyManager {
   constructor(game) {
     this.game = game;
     this.enemies = [];
     this.spawnInterval = 1000;
+    this.spawnRadius = 40;
     // this.spawnLoop();
   }
 
@@ -18,7 +20,8 @@ class EnemyManager {
 
   spawnEnemy(type, amount, position) {
     for (let i = 0; i < amount; i++) {
-      const enemy = new type(this.game,position);
+      const randomPosition = randomPositionInArea(position, this.spawnRadius);
+      const enemy = new type(this.game, randomPosition);
       this.enemies.push(enemy);
     }
   }
