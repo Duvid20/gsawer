@@ -5,33 +5,36 @@ import {
 } from "./functions.js";
 
 class Inventory {
-  constructor() {
+  constructor(game) {
+    this.game = game;
     this.inventoryOpened = false;
     this.inventory_HTML = this.createHtml();
   }
 
-  toggle(game) {
-    this.inventoryOpened ? this.hide(game) : this.show(game);
+  toggle() {
+    this.inventoryOpened ? this.hide() : this.show();
     this.inventoryOpened = !this.inventoryOpened;
   }
 
-  show(game) {
-    game.pause();
-    this.build(game);
+  show() {
+    this.game.pause();
+    this.build();
     elementDisplayFlex(this.inventory_HTML);
     console.log("Inventory opened");
   }
 
-  hide(game) {
-    game.unpause();
+  hide() {
+    this.game.unpause();
     elementDisplayNone(this.inventory_HTML);
     console.log("Inventory closed");
   }
 
-  build(game) {
+  build() {
     this.inventory_HTML.innerHTML = "";
-    const itemCounts = this.countItems(game.itemManager.items.inventory);
-    this.createItemElements(game, itemCounts);
+    const itemCounts = this.countItems(
+      this.game.itemManager.getInventoryItems()
+    );
+    this.createItemElements(itemCounts);
     console.log("Inventory built");
   }
 
@@ -47,10 +50,11 @@ class Inventory {
     return itemCounts;
   }
 
-  createItemElements(game, itemCounts) {
+  createItemElements(itemCounts) {
     for (const [itemName, count] of Object.entries(itemCounts)) {
-      const item = this.findItemByName(
-        game.itemManager.items.inventory,
+      const inventoryItems = this.game.itemManager.getInventoryItems();
+      const item = this.game.itemManager.findItemByName(
+        inventoryItems,
         itemName
       );
       const itemElement = this.createItemHtml(item, count);
@@ -80,12 +84,15 @@ class Inventory {
       count
     );
 
-    itemElement.appendChild(countElement, itemNameElement);
-    return itemElement;
-  }
+    const inventoryFooterElement = createElementWithClass(
+      "div",
+      "press-key-info",
+      "inventory-footer",
+      "Press >e to close"
+    );
 
-  findItemByName(inventoryItems, itemName) {
-    return inventoryItems.find((i) => i.name === itemName);
+    itemElement.appendChild(countElement, itemNameElement, inventoryFooterElement);
+    return itemElement;
   }
 
   createHtml() {

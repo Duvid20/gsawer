@@ -1,6 +1,6 @@
 import { Projectile } from "./projectile.js";
 import {
-  getCenterCoordinates,
+  getCenterCoordinatesBySelector,
   calculateAngle,
   setCssPosition,
   setCssRotation,
@@ -9,17 +9,18 @@ import {
 
 class PlayerWeapon {
   constructor(game, offsetRadius) {
+    this.game = game;
     this.position = { x: 0, y: 0 };
     this.offsetRadius = offsetRadius;
     this.appearence = "-⟭›";
     this.htmlElement = this.createHtmlElement();
 
-    document.addEventListener("click", () => this.shoot(game));
+    document.addEventListener("click", () => this.shoot());
   }
 
-  updatePosition(game) {
-    const playerCenter = getCenterCoordinates("#player");
-    const cursorPosition = game.cursorPosition;
+  updatePosition() {
+    const playerCenter = getCenterCoordinatesBySelector("#player");
+    const cursorPosition = this.game.cursorPosition;
     const angleToCursor = calculateAngle(playerCenter, cursorPosition, true);
 
     // position weapon relative to player
@@ -42,9 +43,13 @@ class PlayerWeapon {
     setCssRotation(this.htmlElement, rotateAngle);
   }
 
-  shoot(game) {
-    if (!game.gamePaused && game.gameRunning) {
-      new Projectile(game, getCenterCoordinates("#player-weapon"));
+  shoot() {
+    if (!this.game.gamePaused && this.game.gameRunning) {
+      const projectile = new Projectile(
+        this.game,
+        getCenterCoordinatesBySelector("#player-weapon")
+      );
+      this.game.player.projectiles.push(projectile);
     }
   }
 

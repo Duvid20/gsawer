@@ -26,11 +26,13 @@ class HealthBar {
   decrease(amount) {
     this.value -= amount;
     if (this.value < 0) this.value = 0;
+    this.setHtmlValues();
   }
 
   increase(amount) {
     this.value += amount;
     if (this.value > max) this.value = max;
+    this.setHtmlValues();
   }
 
   createHtmlElementContainer() {

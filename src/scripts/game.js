@@ -1,12 +1,16 @@
 import { Player } from "./player.js";
 import { ItemManager } from "./itemManager.js";
+import { EnemyManager } from "./enemyManager.js";
 import { Inventory } from "./inventory.js";
+import { Coin, EnergyDrink } from "./item.js";
 import {
   elementDisplayNone,
   elementDisplayBlock,
   elementDisplayFlex,
   setCssPosition,
   getCenterOfScreen,
+  isColliding,
+  getBoundingBox,
 } from "./functions.js";
 
 class Game {
@@ -21,9 +25,9 @@ class Game {
     this.pauseKey = "Escape";
 
     this.player;
-    this.enemies = [];
-    this.itemManager = new ItemManager();
-    this.inventory = new Inventory();
+    this.itemManager;
+    this.enemyManager;
+    this.inventory;
     this.gameRunning = false; // has player pressed start button
     this.gamePaused = false; // did player pause game with pause key while game running
     this.pauseOverlayOpened = false;
@@ -82,14 +86,18 @@ class Game {
     elementDisplayNone(this.landingOverlay_HTML);
     elementDisplayBlock(this.crosshair_HTML);
     this.gameContainer_HTML.style.cursor = "none";
+    this.itemManager = new ItemManager(this);
+    this.enemyManager = new EnemyManager(this);
+    this.inventory = new Inventory(this);
     this.player = new Player(this);
 
     this.setCrosshairPosition();
 
     // testing
-    this.itemManager.collectCoin(1);
-    this.itemManager.dropEnergyDrinks({ x: 200, y: 200 }, false, 3);
-    this.itemManager.dropCoins({ x: 250, y: 230 }, false, 2);
+    this.itemManager.createItems(Coin, { x: 34, y: 230 }, 3, false);
+
+    this.enemyManager.spawnMelee(3, { x: 10, y: 24 });
+    this.enemyManager.spawnRanged(2, { x: 45, y: 76 });
 
     console.log("Game started");
   }
@@ -142,6 +150,41 @@ class Game {
       this.cursorPosition.x - this.crosshair_HTML.offsetWidth / 2,
       this.cursorPosition.y - this.crosshair_HTML.offsetHeight / 2
     );
+  }
+
+  checkCollisions() {
+    const playerBox = getBoundingBox(this.player.htmlElement);
+
+    // player-enemy collition
+    this.enemyManager.enemies.forEach((enemy) => {
+      const enemyBox = getBoundingBox(enemy.htmlElement);
+      if (isColliding(playerBox, enemyBox)) {
+        this.handlePlayerEnemyCollision(enemy);
+      }
+    });
+
+    // projectile-enemy collision
+    this.player.projectiles.forEach((projectile) => {
+      const projectileBox = getBoundingBox(projectile.htmlElement);
+      this.enemyManager.enemies.forEach((enemy) => {
+        const enemyBox = getBoundingBox(enemy.htmlElement);
+        if (isColliding(projectileBox, enemyBox)) {
+          this.handleProjectileEnemyCollision(projectile, enemy);
+        }
+      });
+    });
+  }
+
+  handlePlayerEnemyCollision(enemy) {
+    console.log("Player collided with enemy");
+    this.player.takeDamage(enemy.damage);
+    enemy.die(this);
+  }
+
+  handleProjectileEnemyCollision(projectile, enemy) {
+    console.log("Projectile collided with enemy");
+    enemy.takeDamage(1);
+    projectile.htmlElement.remove();
   }
 }
 

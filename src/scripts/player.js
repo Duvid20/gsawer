@@ -6,10 +6,15 @@ import {
   setCssPosition,
   createElementWithClass,
   getCenterCoordinates,
+  getCenterCoordinatesBySelector,
+  calcDistance,
+  normalizeVelocity,
 } from "./functions.js";
 
 class Player {
   constructor(game) {
+    this.game = game;
+    this.projectiles = [];
     this.position = getCenterOfScreen();
     this.speed = 5;
     this.collectionRadius = 50;
@@ -27,7 +32,7 @@ class Player {
       left: false,
       right: false,
     };
-    this.htmlElement = this.createHtmlElement(game);
+    this.htmlElement = this.createHtmlElement();
     this.weapon = new PlayerWeapon(game, 30);
     this.healthBar = new HealthBar(
       this.maxHealth,
@@ -45,18 +50,32 @@ class Player {
 
     // player movement
     this.initEventListeners();
-    this.updatePosition(game);
+    this.updatePosition();
   }
 
-  updatePosition(game) {
-    if (!game.gamePaused && game.gameRunning) {
-      this.calculatePosition(game);
+  updatePosition() {
+    if (!this.game.gamePaused && this.game.gameRunning) {
+      this.calculatePosition();
       setCssPosition(this.htmlElement, this.position.x, this.position.y);
-      this.collectItemsWithinRadius(game.itemManager);
-      requestAnimationFrame(() => this.updatePosition(game));
-      this.weapon.updatePosition(game);
+      this.collectItemsWithinRadius();
+      requestAnimationFrame(() => this.updatePosition());
+      this.weapon.updatePosition();
       this.collectionRadiusArea.update();
     }
+  }
+
+  takeDamage(amount) {
+    this.health -= amount;
+    this.healthBar.decrease(amount);
+    this.htmlElement.querySelector("#player-appearance").innerHTML =
+      this.appearence.damage;
+    if (this.health <= 0) {
+      this.die();
+    }
+  }
+
+  die() {
+    this.game.end();
   }
 
   initEventListeners() {
@@ -68,7 +87,7 @@ class Player {
     });
   }
 
-  calculatePosition(game) {
+  calculatePosition() {
     let velocity = { x: 0, y: 0 };
 
     if (this.movement.up) {
@@ -85,7 +104,7 @@ class Player {
     }
 
     // normalize  velocity vector if moving diagonally
-    velocity = this.normalizeVelocity(velocity);
+    velocity = normalizeVelocity(velocity, this.speed);
 
     this.position.x += velocity.x;
     this.position.y += velocity.y;
@@ -95,14 +114,15 @@ class Player {
       0,
       Math.min(
         this.position.x,
-        game.gameContainer_HTML.clientWidth - this.htmlElement.clientWidth
+        this.game.gameContainer_HTML.clientWidth - this.htmlElement.clientWidth
       )
     );
     this.position.y = Math.max(
       0,
       Math.min(
         this.position.y,
-        game.gameContainer_HTML.clientHeight - this.htmlElement.clientHeight
+        this.game.gameContainer_HTML.clientHeight -
+          this.htmlElement.clientHeight
       )
     );
   }
@@ -128,7 +148,7 @@ class Player {
     }
   }
 
-  createHtmlElement(game) {
+  createHtmlElement() {
     const player = createElementWithClass("div", "noselect", "player");
     const playerInfos = createElementWithClass("div", "", "player-infos");
     const bulletCount = createElementWithClass("div", "bullet-count");
@@ -147,47 +167,22 @@ class Player {
     player.appendChild(playerInfos);
     player.appendChild(playerAppearance);
 
-    game.gameContainer_HTML.appendChild(player);
+    this.game.gameContainer_HTML.appendChild(player);
 
     return player;
   }
 
-  normalizeVelocity(velocity) {
-    if (velocity.x !== 0 && velocity.y !== 0) {
-      const length = Math.sqrt(
-        velocity.x * velocity.x + velocity.y * velocity.y
-      );
-      velocity.x = (velocity.x / length) * this.speed;
-      velocity.y = (velocity.y / length) * this.speed;
-    }
-    return velocity;
-  }
-
-  collectItemsWithinRadius(itemManager) {
-    const items = itemManager.items.dropped;
-    const playerCenter = getCenterCoordinates("#player");
+  collectItemsWithinRadius() {
+    const items = this.game.itemManager.getDroppedItems();
+    const playerCenter = getCenterCoordinatesBySelector("#player");
 
     items.forEach((item) => {
-      const itemElements = document.querySelectorAll(
-        `.${item.cssClassDropped}`
-      );
-      itemElements.forEach((itemElement) => {
-        const itemRect = itemElement.getBoundingClientRect();
-        const itemCenter = {
-          x: itemRect.left + itemRect.width / 2,
-          y: itemRect.top + itemRect.height / 2,
-        };
+      const itemCenter = getCenterCoordinates(item.htmlElement);
+      const { distance } = calcDistance(itemCenter, playerCenter);
 
-        const distance = Math.sqrt(
-          Math.pow(itemCenter.x - playerCenter.x, 2) +
-            Math.pow(itemCenter.y - playerCenter.y, 2)
-        );
-
-        if (distance <= this.collectionRadius + 5) {
-          itemManager.collectDroppedItem(item);
-          itemElement.remove();
-        }
-      });
+      if (distance <= this.collectionRadius + 5) {
+        item.collect();
+      }
     });
   }
 }

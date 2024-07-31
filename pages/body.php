@@ -16,7 +16,7 @@
             <div>1.4km travelled</div>
             <div>199mg of caffeine in bloodstream</div>
         </div>
-        <div id="pause-footer">press >Esc to continue</div>
+        <div class="press-key-info">press >Esc to continue</div>
     </div>
 
     <div id=game-container>

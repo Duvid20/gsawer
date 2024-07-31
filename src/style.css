@@ -1,5 +1,5 @@
 :root {
-  --d: px; /* Distance from the center of the gradient circle to the edge */
+  --d: 2px; /* Distance from the center of the gradient circle to the edge */
 }
 
 * {
@@ -112,7 +112,7 @@ body {
   z-index: 1;
 }
 
-#pause-footer {
+.press-key-info {
   color: gray;
   font-size: 13px;
 }
@@ -157,10 +157,18 @@ body {
 }
 
 .enemy {
+  border: 1px solid white;
   position: absolute;
-  background-color: red;
   height: 16px;
   width: 16px;
+}
+
+.melee-enemy {
+  background-color: rgb(118, 19, 19);
+}
+
+.ranged-enemy {
+  background-color: rgb(225, 182, 182);
 }
 
 .health-bar-container {
@@ -207,6 +215,11 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+#inventory-footer {
+  display: absolute;
+  bottom: 30px;
 }
 
 .inventory-item {

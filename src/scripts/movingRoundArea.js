@@ -2,7 +2,7 @@ import {
   createElementWithClass,
   setCssPosition,
   setCssSize,
-  getCenterCoordinates,
+  getCenterCoordinatesBySelector,
 } from "./functions.js";
 
 class MovingRoundArea {
@@ -28,7 +28,7 @@ class MovingRoundArea {
   }
 
   calcNewPosition() {
-    const parentCenter = getCenterCoordinates(this.parentSelector);
+    const parentCenter = getCenterCoordinatesBySelector(this.parentSelector);
     const newPosition = {
       x: parentCenter.x - this.radius,
       y: parentCenter.y - this.radius,

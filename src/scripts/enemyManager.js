@@ -5,20 +5,29 @@ class EnemyManager {
     this.game = game;
     this.enemies = [];
     this.spawnInterval = 1000;
-    this.spawnLoop();
+    // this.spawnLoop();
   }
 
   spawnMelee(amount, position) {
+    this.spawnEnemy(Melee, amount, position);
+  }
+
+  spawnRanged(amount, position) {
+    this.spawnEnemy(Ranged, amount, position);
+  }
+
+  spawnEnemy(type, amount, position) {
     for (let i = 0; i < amount; i++) {
-      const enemy = new MeleeEnemy(this.game, position);
+      const enemy = new type(this.game,position);
       this.enemies.push(enemy);
     }
   }
 
-  spawnRanged(amount, position) {
-    for (let i = 0; i < amount; i++) {
-      const enemy = new RangedEnemy(this.game, position);
-      this.enemies.push(enemy);
-    }
+  removeEnemy(enemy) {
+    this.enemies = this.enemies.filter((e) => e !== enemy);
+    enemy.htmlElement.remove();
+    enemy = null;
   }
 }
+
+export { EnemyManager };

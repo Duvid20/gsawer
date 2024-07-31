@@ -8,7 +8,8 @@ import {
 
 class Projectile {
   constructor(game, spawnPosition) {
-    this.htmlElement = this.createHTML(game);
+    this.game = game;
+    this.htmlElement = this.createHTML();
     this.color = "red";
     this.speed = 20;
     this.spawnPosition = spawnPosition;
@@ -16,12 +17,12 @@ class Projectile {
     this.velocity = calculateVelocity(this.angle, this.speed);
 
     this.setCss();
-    this.updateProjectilePosition(game);
+    this.updateProjectilePosition();
   }
 
-  createHTML(game) {
+  createHTML() {
     const projectile = createElementWithClass("div", "projectile");
-    game.gameContainer_HTML.appendChild(projectile);
+    this.game.gameContainer_HTML.appendChild(projectile);
     return projectile;
   }
 
@@ -34,17 +35,17 @@ class Projectile {
     setCssRotation(this.htmlElement, this.angle);
   }
 
-  updateProjectilePosition(game) {
-    game.updatePosition(this.htmlElement, this.velocity, () => {
+  updateProjectilePosition() {
+    this.game.updatePosition(this.htmlElement, this.velocity, () => {
       let projectileX = parseFloat(this.htmlElement.style.left);
       let projectileY = parseFloat(this.htmlElement.style.top);
 
       // remove it if offscreen
       if (
         projectileX < 0 ||
-        projectileX > game.gameContainer_HTML.clientWidth ||
+        projectileX > this.game.gameContainer_HTML.clientWidth ||
         projectileY < 0 ||
-        projectileY > game.gameContainer_HTML.clientHeight
+        projectileY > this.game.gameContainer_HTML.clientHeight
       ) {
         this.htmlElement.remove();
         return false;
