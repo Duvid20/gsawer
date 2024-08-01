@@ -1,33 +1,62 @@
 import { Player } from "./player.js";
 import { Projectile } from "./projectile.js";
 import { MeleeEnemy, RangedEnemy } from "./enemy.js";
+import { Weapon } from "./weapon.js";
+import { ItemManager } from "./itemManager.js";
+
+const landingPage = document.getElementById("landing-page");
+const canvas = document.getElementById("game-canvas");
 
 class Game {
   constructor() {
-    this.canvas = document.getElementById("gameCanvas");
+    this.canvas = canvas;
     this.context = this.canvas.getContext("2d");
-    this.player = new Player(
-      this.canvas,
-      this.canvas.width / 2,
-      this.canvas.height / 2
-    );
-    this.projectiles = [];
-    this.enemies = [];
+
     this.init();
     this.spawnEnemy();
     this.startGameLoop();
   }
 
   init() {
+    this.gameRunning = false;
+    this.pauseOverlayOpened = false;
+    this.player = new Player(
+      this,
+      this.canvas.width / 2,
+      this.canvas.height / 2
+    );
+    this.playerWeapon = new Weapon(this, this.player);
+    this.itemManager = new ItemManager(this);
+    this.projectiles = [];
+    this.enemies = [];
+
     this.resizeCanvas();
+    this.initEventListeners();
+    this.startGameLoop();
+  }
+
+  initEventListeners() {
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "e") {
+        this.player.inventory.toggle();
+      }
+
+      if (event.key === " ") {
+        this.player.inventory.useItem("EnergyDrink", this.player);
+      }
+
+      if (event.key === "Escape") {
+        // open pause overlay
+      }
+    });
+
     window.addEventListener("resize", () => this.resizeCanvas());
     window.addEventListener("keydown", (e) => this.player.handleKeyDown(e));
     window.addEventListener("keyup", (e) => this.player.handleKeyUp(e));
-    window.addEventListener("mousemove", (e) =>
-      this.player.weapon.rotateToCursor(e)
-    );
     window.addEventListener("click", () => this.fireProjectile());
-    this.startGameLoop();
+    window.addEventListener("mousemove", (e) =>
+      this.playerWeapon.rotateToCursor(e)
+    );
   }
 
   resizeCanvas() {
@@ -36,6 +65,7 @@ class Game {
   }
 
   startGameLoop() {
+    this.gameRunning = true;
     const loop = () => {
       this.update();
       this.draw();
@@ -44,11 +74,17 @@ class Game {
     loop();
   }
 
+  endGame() {
+    this.gameRunning = false;
+  }
+
   update() {
     this.player.update();
     this.projectiles.forEach((projectile, index) => {
       projectile.update();
-
+      if (projectile.isOutOfBounds(this.canvas.width, this.canvas.height)) {
+        this.projectiles.splice(index, 1);
+      }
     });
     this.enemies.forEach((enemy) => {
       enemy.update();
@@ -57,7 +93,7 @@ class Game {
 
   draw() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    
+
     this.player.draw(this.context);
     this.projectiles.forEach((projectile) => projectile.draw(this.context));
     this.enemies.forEach((enemie) => enemie.draw(this.context));
@@ -65,9 +101,9 @@ class Game {
 
   fireProjectile() {
     const projectile = new Projectile(
-      this.player.weapon.x,
-      this.player.weapon.y,
-      this.player.weapon.rotation
+      this.playerWeapon.x,
+      this.playerWeapon.y,
+      this.playerWeapon.rotation
     );
     this.projectiles.push(projectile);
   }
@@ -95,8 +131,8 @@ class Game {
 }
 
 document.getElementById("start-game-button").addEventListener("click", () => {
-  document.getElementById("landing-page").style.display = "none";
-  document.getElementById("gameCanvas").style.display = "block";
+  landingPage.style.display = "none";
+  canvas.style.display = "block";
   new Game();
 });
 

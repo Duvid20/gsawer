@@ -1,4 +1,4 @@
-/*import {
+import {
   createElementWithClass,
   setCssPosition,
   randomPositionInArea,
@@ -8,15 +8,14 @@ class Item {
   constructor(
     game,
     name,
-    label,
     symbol,
     cssClassDropped,
     cssClassInventory,
     inInventory
   ) {
     this.game = game;
+    this.canvas = game.canvas;
     this.name = name;
-    this.label = label;
     this.symbol = symbol;
     this.cssClassDropped = cssClassDropped;
     this.cssClassInventory = cssClassInventory;
@@ -36,7 +35,7 @@ class Item {
     );
 
     setCssPosition(itemElement, randomPosition.x, randomPosition.y);
-    document.getElementById("game-container").appendChild(itemElement);
+    this.canvas.appendChild(itemElement);
     this.htmlElement = itemElement;
   }
 
@@ -64,15 +63,7 @@ class Item {
 
 class Coin extends Item {
   constructor(game, inInventory) {
-    super(
-      game,
-      "coin",
-      "Coin",
-      "©",
-      "coin-dropped",
-      "coin-inventory",
-      inInventory
-    );
+    super(game, "Coin", "©", "coin-dropped", "coin-inventory", inInventory);
   }
 
   use() {
@@ -84,7 +75,6 @@ class EnergyDrink extends Item {
   constructor(game, inInventory) {
     super(
       game,
-      "energyDrink",
       "Energy Drink",
       "▯",
       "energy-drink-dropped",
@@ -94,9 +84,8 @@ class EnergyDrink extends Item {
   }
 
   use() {
-    console.log("Energy Drink used");
-    // shoot faster for certain amount of time
+    this.game.player.increaseFireRate(5);
   }
 }
 
-export { Coin, EnergyDrink };*/
+export { Coin, EnergyDrink };

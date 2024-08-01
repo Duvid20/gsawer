@@ -1,9 +1,22 @@
 <body>
-
     <div id="landing-page">
-        <button id="start-game-button">Start Game</button>
+        <div class="game-logo">
+            <div class="game-name-decoration">⌞↽⫎⫐⨵⪓</div>
+            <div class="game-name">GSAWER</div>
+            <div class="game-name-decoration">⪔⨴⫏⫍⇁⌟</div>
+        </div>
+        <button class="classic-look" id="start-game-button">Play</button>
     </div>
-    <canvas id="gameCanvas"></canvas>
+
+    <canvas id="game-canvas"></canvas>
+
+    <div id="fire-rate-timer"></div>
+
+    <div class="classic-look" id="inventory">
+        <div id="inventory-header">Inventory</div>
+        <div id=inventory-body></div>
+        <div class="press-key-info" inventory-footer>Press >e to close</div>
+    </div>
     <!-- <div id="landing-overlay">
         <div class="game-logo">
             <div class="game-name-decoration">⌞↽⫎⫐⨵⪓</div>

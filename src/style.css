@@ -1,25 +1,145 @@
-body {
-  margin: 0;
-  overflow: hidden;
+:root {
+  --d: 2px;
 }
 
+* {
+  font-family: "Courier New", Courier, monospace;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  }
+
 #landing-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: fixed;
+  background: radial-gradient(
+      circle at var(--d) var(--d),
+      #71717a calc(var(--d) - 1px),
+      #09090b var(--d)
+    ) -2px -2px / 16px 16px;
+  width: 100vw;
   height: 100vh;
-  background-color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
 }
 
 #start-game-button {
-  padding: 20px;
-  font-size: 24px;
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 100px;
+  font-size: 15px;
 }
 
-#gameCanvas {
+#start-game-button:hover {
+  border: 2px solid red;
+  font-weight: bold;
+}
+
+.game-logo {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.game-name {
+  color: white;
+  font-size: 90px;
+}
+
+.game-name-decoration {
+  font-size: 40px;
+  color: red;
+}
+
+#game-canvas {
   display: none;
-  background-color: #000;
+  background: radial-gradient(
+      circle at var(--d) var(--d),
+      #71717a calc(var(--d) - 1px),
+      #09090b var(--d)
+    ) -2px -2px / 16px 16px;
+}
+
+#fire-rate-timer {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  font-size: 16px;
+  z-index: 2;
+}
+
+#inventory {
+  height: 70vh;
+  width: 70vw;
+  position: fixed;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border: 1px solid white;
+  border-radius: 4px;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.inventory-item {
+  position: relative;
+  border: 1px solid white;
+  border-radius: 4px;
+  color: white;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.classic-look {
+  background-color: black;
+  border: 1px solid white;
+  border-radius: 4px;
+  color: white;
+}
+
+#pause-overlay {
+  color: white;
+  position: fixed;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  background-color: black;
+  text-align: center;
+  white-space: nowrap;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  z-index: 1;
+}
+
+.press-key-info {
+  color: gray;
+  font-size: 13px;
 }
 
 /* :root {

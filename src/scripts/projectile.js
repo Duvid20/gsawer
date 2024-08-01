@@ -1,6 +1,5 @@
 class Projectile {
-  constructor(canvas, x, y, rotation) {
-    this.canvas = canvas;
+  constructor(x, y, rotation) {
     this.x = x;
     this.y = y;
     this.rotation = rotation;
@@ -10,10 +9,6 @@ class Projectile {
   update() {
     this.x += Math.cos(this.rotation) * this.speed;
     this.y += Math.sin(this.rotation) * this.speed;
-
-    if (this.isOutOfBounds()) {
-      this.projectiles.splice(index, 1);
-    }
   }
 
   draw(context) {
@@ -23,10 +18,8 @@ class Projectile {
     context.fill();
   }
 
-  isOutOfBounds() {
-    const x = this.canvas.width;
-    const y = this.canvas.height;
-    return x < 0 || x > width || y < 0 || y > height;
+  isOutOfBounds(width, height) {
+    return this.x < 0 || this.x > width || this.y < 0 || this.y > height;
   }
 }
 

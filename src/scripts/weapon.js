@@ -1,19 +1,28 @@
 class Weapon {
-  constructor(player) {
-    this.player = player;
+  constructor(game, parent) {
+    this.game = game;
+    this.parent = parent;
     this.rotation = 0;
+    this.x = this.parent.x;
+    this.y = this.parent.y;
+    this.lastMouseEvent;
   }
 
   rotateToCursor(e) {
-    const rect = this.player.canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    this.rotation = Math.atan2(mouseY - this.player.y, mouseX - this.player.x);
+    this.lastMouseEvent = e;
+    const { left, top } = this.game.canvas.getBoundingClientRect();
+    const mouseX = e.clientX - left;
+    const mouseY = e.clientY - top;
+    this.rotation = Math.atan2(mouseY - this.parent.y, mouseX - this.parent.x);
   }
 
   update() {
-    this.x = this.player.x;
-    this.y = this.player.y;
+    this.x = this.parent.x;
+    this.y = this.parent.y;
+
+    if (this.lastMouseEvent) {
+      this.rotateToCursor(this.lastMouseEvent);
+    }
   }
 
   draw(context) {
