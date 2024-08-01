@@ -3,7 +3,9 @@ import { Projectile } from "./projectile.js";
 import { MeleeEnemy, RangedEnemy } from "./enemy.js";
 import { Weapon } from "./weapon.js";
 import { ItemManager } from "./itemManager.js";
+import { getBoundingBox } from "./functions.js";
 
+const startGameButton = document.getElementById("start-game-button");
 const landingPage = document.getElementById("landing-page");
 const canvas = document.getElementById("game-canvas");
 
@@ -29,6 +31,8 @@ class Game {
     this.itemManager = new ItemManager(this);
     this.projectiles = [];
     this.enemies = [];
+    this.enemySpawnInterval = 5000;
+    this.enemiesKilled = 0;
 
     this.resizeCanvas();
     this.initEventListeners();
@@ -89,6 +93,7 @@ class Game {
     this.enemies.forEach((enemy) => {
       enemy.update();
     });
+    this.checkCollisions();
   }
 
   draw() {
@@ -110,10 +115,10 @@ class Game {
 
   spawnEnemy() {
     setInterval(() => {
-      const enemyType = Math.random() < 0.5 ? MeleeEnemy : RangedEnemy;
+      const enemyType = Math.random() < 0.3 ? MeleeEnemy : RangedEnemy;
       const position = this.randomSpawnPosition();
       this.enemies.push(new enemyType(this, position.x, position.y));
-    }, 2000);
+    }, this.enemySpawnInterval);
   }
 
   randomSpawnPosition() {
@@ -121,202 +126,109 @@ class Game {
     do {
       x = Math.random() * this.canvas.width;
       y = Math.random() * this.canvas.height;
-    } while (this.distanceToPlayer(x, y) < 300);
+    } while (this.distanceToPlayer(x, y) < 500);
     return { x, y };
   }
 
   distanceToPlayer(x, y) {
     return Math.hypot(this.player.x - x, this.player.y - y);
   }
-}
-
-document.getElementById("start-game-button").addEventListener("click", () => {
-  landingPage.style.display = "none";
-  canvas.style.display = "block";
-  new Game();
-});
-
-/*import { Player } from "./player.js";
-import { ItemManager } from "./itemManager.js";
-import { EnemyManager } from "./enemyManager.js";
-import { Inventory } from "./inventory.js";
-import { Coin, EnergyDrink } from "./item.js";
-import {
-  elementDisplayNone,
-  elementDisplayBlock,
-  elementDisplayFlex,
-  setCssPosition,
-  getCenterOfScreen,
-  isColliding,
-  getBoundingBox,
-} from "./functions.js";
-
-class Game {
-  constructor() {
-    this.startGameButton_HTML = document.getElementById("start-game-button");
-    this.landingOverlay_HTML = document.getElementById("landing-overlay");
-    this.gameContainer_HTML = document.getElementById("game-container");
-    this.crosshair_HTML = document.getElementById("crosshair");
-    this.pauseOverlay_HTML = document.getElementById("pause-overlay");
-
-    this.inventoryKey = "e";
-    this.pauseKey = "Escape";
-
-    this.player;
-    this.itemManager;
-    this.enemyManager;
-    this.inventory;
-    this.gameRunning = false; // has player pressed start button
-    this.gamePaused = false; // did player pause game with pause key while game running
-    this.pauseOverlayOpened = false;
-
-    this.spawnPadding = 50;
-    this.enemyStopDistance = 50;
-    this.cursorPosition = getCenterOfScreen();
-
-    this.startGameButton_HTML.addEventListener("click", () => this.start());
-    console.log("Game initialized");
-  }
-
-  initEventListeners() {
-    document.addEventListener("mousemove", (event) => {
-      // update cursor position variable
-      this.cursorPosition = {
-        x: event.clientX,
-        y: event.clientY,
-      };
-      // crosshair position
-      this.setCrosshairPosition();
-    });
-
-    document.addEventListener("keydown", (event) => {
-      // toggle pausing
-      if (
-        this.gameRunning &&
-        !this.inventory.inventoryOpened &&
-        event.key === this.pauseKey
-      ) {
-        if (this.pauseOverlayOpened) {
-          this.unpause();
-          elementDisplayNone(this.pauseOverlay_HTML);
-        } else {
-          this.pause();
-          elementDisplayFlex(this.pauseOverlay_HTML);
-        }
-
-        this.pauseOverlayOpened = !this.pauseOverlayOpened;
-      }
-
-      if (
-        this.gameRunning &&
-        !this.pauseOverlayOpened &&
-        event.key === this.inventoryKey
-      ) {
-        this.inventory.toggle(this);
-      }
-    });
-  }
-
-  start() {
-    this.gameRunning = true;
-    this.initEventListeners();
-
-    elementDisplayNone(this.landingOverlay_HTML);
-    elementDisplayBlock(this.crosshair_HTML);
-    this.gameContainer_HTML.style.cursor = "none";
-    this.itemManager = new ItemManager(this);
-    this.enemyManager = new EnemyManager(this);
-    this.inventory = new Inventory(this);
-    this.player = new Player(this);
-
-    this.setCrosshairPosition();
-
-    // testing
-    this.itemManager.createItems(Coin, { x: 34, y: 230 }, 3, false);
-
-    this.enemyManager.spawnMelee(7, { x: 10, y: 24 });
-    this.enemyManager.spawnRanged(2, { x: 45, y: 76 });
-
-    console.log("Game started");
-  }
-
-  end() {
-    elementDisplayFlex(this.landingOverlay_HTML);
-    this.gameContainer_HTML.style.cursor = "pointer";
-    this.gameRunning = false;
-
-    console.log("Game ended");
-  }
-
-  pause() {
-    elementDisplayNone(this.crosshair_HTML);
-    this.gameContainer_HTML.style.cursor = "default";
-
-    this.gamePaused = true;
-    console.log("Game paused");
-  }
-
-  unpause() {
-    elementDisplayBlock(this.crosshair_HTML);
-    this.gameContainer_HTML.style.cursor = "none";
-
-    this.gamePaused = false;
-    console.log("Game unpaused");
-
-    // restart updatePosition loop
-    this.player.updatePosition(this);
-  }
-
-  updatePosition(element, velocity, conditionCallback) {
-    const move = () => {
-      if (conditionCallback()) {
-        setCssPosition(
-          element,
-          parseFloat(element.style.left) + velocity.x,
-          parseFloat(element.style.top) + velocity.y
-        );
-        requestAnimationFrame(move);
-      }
-    };
-    requestAnimationFrame(move);
-  }
-
-  setCrosshairPosition() {
-    // center crosshair on cursor
-    setCssPosition(
-      this.crosshair_HTML,
-      this.cursorPosition.x - this.crosshair_HTML.offsetWidth / 2,
-      this.cursorPosition.y - this.crosshair_HTML.offsetHeight / 2
-    );
-  }
 
   checkCollisions() {
-    const playerBox = getBoundingBox(this.player.htmlElement);
-
-    // player-enemy collition
-    this.enemyManager.enemies.forEach((enemy) => {
-      const enemyBox = getBoundingBox(enemy.htmlElement);
-      if (isColliding(playerBox, enemyBox)) {
+    // player with enemy
+    this.enemies.forEach((enemy) => {
+      if (this.isColliding(this.player, enemy)) {
         this.handlePlayerEnemyCollision(enemy);
       }
     });
 
-    // projectile-enemy collision
-    this.player.projectiles.forEach((projectile) => {
-      const projectileBox = getBoundingBox(projectile.htmlElement);
-      this.enemyManager.enemies.forEach((enemy) => {
-        const enemyBox = getBoundingBox(enemy.htmlElement);
-        if (isColliding(projectileBox, enemyBox)) {
-          this.handleProjectileEnemyCollision(projectile, enemy);
+    // enemy or player with projectile
+    this.projectiles.forEach((projectile) => {
+      if (!projectile.fromEnemy) {
+        this.enemies.forEach((enemy) => {
+          if (this.isColliding(projectile, enemy)) {
+            this.handleProjectileEnemyCollision(projectile, enemy);
+          }
+        });
+      } else {
+        if (this.isColliding(this.player, projectile)) {
+          this.handlePlayerProjectileCollision(projectile);
         }
-      });
+      }
     });
+  }
+
+  isColliding(element1, element2) {
+    // Helper function to check AABB collision
+    function isAABBColliding(rect1, rect2) {
+      return (
+        rect1.x < rect2.x + rect2.width &&
+        rect1.x + rect1.width > rect2.x &&
+        rect1.y < rect2.y + rect2.height &&
+        rect1.y + rect1.height > rect2.y
+      );
+    }
+
+    // Helper function to check circle-circle collision
+    function isCircleColliding(circle1, circle2) {
+      const dx = circle1.x - circle2.x;
+      const dy = circle1.y - circle2.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      return distance < circle1.radius + circle2.radius;
+    }
+
+    // Helper function to check rectangle-circle collision
+    function isRectCircleColliding(rect, circle) {
+      const distX = Math.abs(circle.x - rect.x - rect.width / 2);
+      const distY = Math.abs(circle.y - rect.y - rect.height / 2);
+
+      if (distX > rect.width / 2 + circle.radius) {
+        return false;
+      }
+      if (distY > rect.height / 2 + circle.radius) {
+        return false;
+      }
+
+      if (distX <= rect.width / 2) {
+        return true;
+      }
+      if (distY <= rect.height / 2) {
+        return true;
+      }
+
+      const dx = distX - rect.width / 2;
+      const dy = distY - rect.height / 2;
+      return dx * dx + dy * dy <= circle.radius * circle.radius;
+    }
+
+    // Determine the type of each element
+    const isElement1Arc = element1.radius !== undefined;
+    const isElement2Arc = element2.radius !== undefined;
+
+    if (!isElement1Arc && !isElement2Arc) {
+      // Both elements are rectangles
+      return isAABBColliding(element1, element2);
+    } else if (isElement1Arc && isElement2Arc) {
+      // Both elements are circles
+      return isCircleColliding(element1, element2);
+    } else {
+      // One element is a rectangle and the other is a circle
+      const rect = isElement1Arc ? element2 : element1;
+      const circle = isElement1Arc ? element1 : element2;
+      return isRectCircleColliding(rect, circle);
+    }
   }
 
   handlePlayerEnemyCollision(enemy) {
     console.log("Player collided with enemy");
     this.player.takeDamage(enemy.damage);
     enemy.die(this);
+  }
+
+  handlePlayerProjectileCollision(projectile) {
+    console.log("Player hit by projectile");
+    this.player.takeDamage(projectile.damage);
+    projectile.htmlElement.remove();
   }
 
   handleProjectileEnemyCollision(projectile, enemy) {
@@ -326,6 +238,8 @@ class Game {
   }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  const game = new Game();
-});*/
+startGameButton.addEventListener("click", () => {
+  landingPage.style.display = "none";
+  canvas.style.display = "block";
+  new Game();
+});

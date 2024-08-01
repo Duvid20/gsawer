@@ -173,9 +173,7 @@ export function getBoundingBox(element) {
 
 export function normalizeVelocity(velocity, speed) {
   if (velocity.x !== 0 && velocity.y !== 0) {
-    const length = Math.sqrt(
-      velocity.x * velocity.x + velocity.y * velocity.y
-    );
+    const length = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
     velocity.x = (velocity.x / length) * speed;
     velocity.y = (velocity.y / length) * speed;
   }
