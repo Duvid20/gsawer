@@ -1,4 +1,6 @@
-import {
+
+
+/*import {
   createElementWithClass,
   setCssPosition,
   setCssSize,
@@ -91,4 +93,4 @@ class HealthBar {
   }
 }
 
-export { HealthBar };
+export { HealthBar };*/

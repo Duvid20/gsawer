@@ -1,4 +1,6 @@
-import { Melee, Ranged } from "./enemy.js";
+
+
+/*import { Melee, Ranged } from "./enemy.js";
 import { randomPositionInArea } from "./functions.js";
 
 class EnemyManager {
@@ -53,4 +55,4 @@ class EnemyManager {
   }
 }
 
-export { EnemyManager };
+export { EnemyManager };*/

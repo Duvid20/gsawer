@@ -1,4 +1,33 @@
-import { Projectile } from "./projectile.js";
+class Weapon {
+  constructor(player) {
+    this.player = player;
+    this.rotation = 0;
+  }
+
+  rotateToCursor(e) {
+    const rect = this.player.canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    this.rotation = Math.atan2(mouseY - this.player.y, mouseX - this.player.x);
+  }
+
+  update() {
+    this.x = this.player.x;
+    this.y = this.player.y;
+  }
+
+  draw(context) {
+    context.save();
+    context.translate(this.x, this.y);
+    context.rotate(this.rotation);
+    context.fillStyle = "red";
+    context.fillRect(20, -5, 20, 10);
+    context.restore();
+  }
+}
+
+export { Weapon };
+/*import { Projectile } from "./projectile.js";
 import {
   getCenterCoordinatesBySelector,
   calculateAngle,
@@ -65,4 +94,4 @@ class PlayerWeapon {
   }
 }
 
-export { PlayerWeapon };
+export { PlayerWeapon };*/

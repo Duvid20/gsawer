@@ -1,4 +1,4 @@
-class ItemManager {
+/*class ItemManager {
   constructor(game) {
     this.game = game;
     this.items = [];
@@ -28,4 +28,4 @@ class ItemManager {
   }
 }
 
-export { ItemManager };
+export { ItemManager };*/

@@ -1,4 +1,4 @@
-import {
+/*import {
   createElementWithClass,
   setCssPosition,
   randomPositionInArea,
@@ -99,4 +99,4 @@ class EnergyDrink extends Item {
   }
 }
 
-export { Coin, EnergyDrink };
+export { Coin, EnergyDrink };*/

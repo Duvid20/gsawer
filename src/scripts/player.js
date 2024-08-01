@@ -1,4 +1,41 @@
-import { PlayerWeapon } from "./playerWeapon.js";
+import { Weapon } from "./playerWeapon.js";
+
+class Player {
+  constructor(canvas, x, y) {
+    this.canvas = canvas;
+    this.x = x;
+    this.y = y;
+    this.speed = 5;
+    this.weapon = new Weapon(this);
+    this.keys = {};
+  }
+
+  handleKeyDown(e) {
+    this.keys[e.key] = true;
+  }
+
+  handleKeyUp(e) {
+    this.keys[e.key] = false;
+  }
+
+  update() {
+    if (this.keys["a"] || this.keys["arrowUp"]) this.x -= this.speed;
+    if (this.keys["d"]) this.x += this.speed;
+    if (this.keys["w"]) this.y -= this.speed;
+    if (this.keys["s"]) this.y += this.speed;
+    this.weapon.update();
+  }
+
+  draw(context) {
+    context.fillStyle = "blue";
+    context.fillRect(this.x - 15, this.y - 15, 30, 30);
+    this.weapon.draw(context);
+  }
+}
+
+export { Player };
+
+/*import { PlayerWeapon } from "./playerWeapon.js";
 import { HealthBar } from "./healthBar.js";
 import { MovingRoundArea } from "./movingRoundArea.js";
 import {
@@ -187,4 +224,4 @@ class Player {
   }
 }
 
-export { Player };
+export { Player };*/

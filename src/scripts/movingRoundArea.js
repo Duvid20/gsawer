@@ -1,4 +1,4 @@
-import {
+/*import {
   createElementWithClass,
   setCssPosition,
   setCssSize,
@@ -38,4 +38,4 @@ class MovingRoundArea {
   }
 }
 
-export { MovingRoundArea };
+export { MovingRoundArea };*/

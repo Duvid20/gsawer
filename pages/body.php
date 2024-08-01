@@ -1,5 +1,10 @@
 <body>
-    <div id="landing-overlay">
+
+    <div id="landing-page">
+        <button id="start-game-button">Start Game</button>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <!-- <div id="landing-overlay">
         <div class="game-logo">
             <div class="game-name-decoration">⌞↽⫎⫐⨵⪓</div>
             <div class="game-name">GSAWER</div>
@@ -21,5 +26,8 @@
 
     <div id=game-container>
         <div class="noselect" id="crosshair">-•-</div>
-    </div>
+    </div> -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="module" src="src/scripts/game.js"></script>
 </body>

@@ -1,4 +1,75 @@
-import {
+import { Projectile } from "./projectile.js";
+
+class Enemy {
+  constructor(game, x, y) {
+    this.game = game;
+    this.x = x;
+    this.y = y;
+    this.speed = 2;
+  }
+
+  update() {
+    this.moveTowardsPlayer();
+  }
+
+  moveTowardsPlayer() {
+    const angle = Math.atan2(
+      this.game.player.y - this.y,
+      this.game.player.x - this.x
+    );
+    this.x += this.speed * Math.cos(angle);
+    this.y += this.speed * Math.sin(angle);
+  }
+
+  draw(context) {
+    context.fillStyle = "red";
+    context.beginPath();
+    context.arc(this.x, this.y, 15, 0, Math.PI * 2);
+    context.fill();
+  }
+}
+
+class MeleeEnemy extends Enemy {
+  constructor(game, x, y) {
+    super(game, x, y);
+    this.speed = 2;
+  }
+
+  moveTowardsPlayer() {
+    const distance = this.game.distanceToPlayer(this.x, this.y);
+    if (distance > 0) {
+      super.moveTowardsPlayer();
+    }
+  }
+}
+
+class RangedEnemy extends Enemy {
+  constructor(game, x, y) {
+    super(game, x, y);
+    this.speed = 1;
+    this.shootInterval = setInterval(() => this.shoot(), 1000);
+  }
+
+  moveTowardsPlayer() {
+    const distance = this.game.distanceToPlayer(this.x, this.y);
+    if (distance > 200) {
+      super.moveTowardsPlayer();
+    }
+  }
+
+  shoot() {
+    const angle = Math.atan2(
+      this.game.player.y - this.y,
+      this.game.player.x - this.x
+    );
+    const projectile = new Projectile(this.x, this.y, angle);
+    this.game.enemies.push(projectile);
+  }
+}
+
+export { MeleeEnemy, RangedEnemy };
+
+/*import {
   createElementWithClass,
   getCenterCoordinatesBySelector,
   getCenterCoordinates,
@@ -123,4 +194,4 @@ class Ranged extends Enemy {
   }
 }
 
-export { Melee, Ranged };
+export { Melee, Ranged };*/

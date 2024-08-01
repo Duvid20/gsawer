@@ -1,4 +1,38 @@
-import {
+class Projectile {
+  constructor(canvas, x, y, rotation) {
+    this.canvas = canvas;
+    this.x = x;
+    this.y = y;
+    this.rotation = rotation;
+    this.speed = 10;
+  }
+
+  update() {
+    this.x += Math.cos(this.rotation) * this.speed;
+    this.y += Math.sin(this.rotation) * this.speed;
+
+    if (this.isOutOfBounds()) {
+      this.projectiles.splice(index, 1);
+    }
+  }
+
+  draw(context) {
+    context.fillStyle = "yellow";
+    context.beginPath();
+    context.arc(this.x, this.y, 5, 0, Math.PI * 2);
+    context.fill();
+  }
+
+  isOutOfBounds() {
+    const x = this.canvas.width;
+    const y = this.canvas.height;
+    return x < 0 || x > width || y < 0 || y > height;
+  }
+}
+
+export { Projectile };
+
+/*import {
   setCssPosition,
   setCssRotation,
   createElementWithClass,
@@ -55,4 +89,4 @@ class Projectile {
   }
 }
 
-export { Projectile };
+export { Projectile };*/
