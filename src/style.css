@@ -15,7 +15,27 @@
 body {
   margin: 0;
   padding: 0;
-  }
+}
+
+#crosshair {
+  display: none;
+  position: absolute;
+  color: white;
+}
+
+.game-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 100px;
+  font-size: 15px;
+}
+
+.game-button:hover {
+  border: 2px solid red;
+  font-weight: bold;
+}
 
 #landing-page {
   position: fixed;
@@ -33,20 +53,6 @@ body {
   gap: 20px;
 }
 
-#start-game-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-  width: 100px;
-  font-size: 15px;
-}
-
-#start-game-button:hover {
-  border: 2px solid red;
-  font-weight: bold;
-}
-
 .game-logo {
   display: flex;
   flex-direction: row;
@@ -62,6 +68,29 @@ body {
 .game-name-decoration {
   font-size: 40px;
   color: red;
+}
+
+#game-over-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50vw;
+  height: 50vh;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  opacity: 0.85;
+}
+
+#game-over-text {
+  color: red;
+  font-size: 80px;
+}
+
+#game-over-button {
+  opacity: 1;
 }
 
 #game-canvas {
@@ -140,6 +169,38 @@ body {
 .press-key-info {
   color: gray;
   font-size: 13px;
+}
+
+#pause-overlay {
+  color: white;
+  position: fixed;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  background-color: black;
+  text-align: center;
+  white-space: nowrap;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  z-index: 1;
+}
+
+.press-key-info {
+  color: gray;
+  font-size: 13px;
+}
+
+#pause-header {
+  font-size: 25px;
+}
+
+.dropped-item {
+  position: absolute;
+  font-size: 22px;
 }
 
 /* :root {

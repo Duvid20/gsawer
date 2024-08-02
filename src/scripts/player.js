@@ -20,7 +20,6 @@ class Player {
       "green",
       this.maxHealth,
       this.maxHealth,
-      false
     );
     this.collectionRadius = 40;
     this.fireRate = 1;
@@ -85,7 +84,7 @@ class Player {
     if (remainingTime > 0) {
       setTimeout(() => this.updateFireRateDisplay(), 100);
     } else {
-      this.fireRate = 1; // Reset fire rate
+      this.fireRate /= 2; // Reset fire rate
     }
   }
 

@@ -18,11 +18,10 @@ class Enemy {
       game,
       x,
       y,
-      60,
+      30,
       "red",
       this.health,
-      this.health,
-      true
+      this.health
     );
   }
 
@@ -90,8 +89,8 @@ class Enemy {
 
 class MeleeEnemy extends Enemy {
   constructor(game, x, y) {
-    super(game, x, y, 3, "red", 3, 2);
-    this.speed = 2;
+    super(game, x, y, 7, "red", 3, 2);
+    this.speed = 1.5;
     this.distance = 0;
     this.attackTime = 300;
     this.attackInterval = setInterval(() => this.attack(), this.attackTime);
@@ -108,7 +107,7 @@ class MeleeEnemy extends Enemy {
 
 class RangedEnemy extends Enemy {
   constructor(game, x, y) {
-    super(game, x, y, 2, "pink", 1, 1);
+    super(game, x, y, 4, "pink", 1, 1);
     this.distance = 200;
     this.attackTime = 300;
     this.attackInterval = setInterval(() => this.attack(), this.attackTime);

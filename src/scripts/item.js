@@ -14,6 +14,7 @@ class Item {
     inInventory
   ) {
     this.game = game;
+    this.context = game.context;
     this.canvas = game.canvas;
     this.name = name;
     this.symbol = symbol;
@@ -23,26 +24,22 @@ class Item {
     this.htmlElement;
   }
 
-  instantiateHtmlElement(position) {
-    const itemElement = createElementWithClass(
-      "div",
-      `${this.cssClassDropped} dropped-item`
-    );
-    itemElement.innerHTML = this.symbol;
+  draw() {
+    this.context.font = "20px Arial";
+    this.context.textAlign = "center";
+    this.context.textBaseline = "middle";
+    this.context.clearRect(this.position.x - 10, this.position.y - 10, 20, 20); // Clear previous position
+    this.context.fillText(this.symbol, this.position.x, this.position.y);
+  }
+
+  drop(position) {
+    this.inInventory = false;
     const randomPosition = randomPositionInArea(
       position,
       this.game.itemManager.dropRadius
     );
-
-    setCssPosition(itemElement, randomPosition.x, randomPosition.y);
-    this.canvas.appendChild(itemElement);
-    this.htmlElement = itemElement;
-  }
-
-  deleteHtmlElement() {
-    this.htmlElement.remove();
-    console.log(this.htmlElement.innerHTML + " deleted");
-    this.htmlElement = null;
+    this.position = randomPosition;
+    this.draw();
   }
 
   collect() {
@@ -50,24 +47,9 @@ class Item {
     this.deleteHtmlElement();
   }
 
-  drop(position) {
-    this.inInventory = false;
-    this.instantiateHtmlElement(position);
-  }
-
   delete() {
     deleteHtmlElement();
     this.game.itemManager.removeItem(this);
-  }
-
-  draw() {
-    if (this.inInventory) {
-      this.htmlElement.classList.remove(this.cssClassDropped);
-      this.htmlElement.classList.add(this.cssClassInventory);
-    } else {
-      this.htmlElement.classList.remove(this.cssClassInventory);
-      this.htmlElement.classList.add(this.cssClassDropped);
-    }
   }
 }
 

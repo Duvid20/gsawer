@@ -6,7 +6,11 @@ import { ItemManager } from "./itemManager.js";
 
 const startGameButton = document.getElementById("start-game-button");
 const landingPage = document.getElementById("landing-page");
+const gameOverOverlay = document.getElementById("game-over-overlay");
+const pauseOverlay = document.getElementById("pause-overlay");
+const homeButton = document.getElementById("home-button");
 const canvas = document.getElementById("game-canvas");
+const crosshair = document.getElementById("crosshair");
 
 class Game {
   constructor() {
@@ -20,6 +24,7 @@ class Game {
 
   init() {
     this.gameRunning = false;
+    this.gamePaused = false;
     this.pauseOverlayOpened = false;
     this.player = new Player(
       this,
@@ -30,8 +35,9 @@ class Game {
     this.itemManager = new ItemManager(this);
     this.projectiles = [];
     this.enemies = [];
-    this.enemySpawnInterval = 2000;
+    this.enemySpawnInterval = 700;
     this.enemiesKilled = 0;
+    this.enemySpawnIntervalId = null;
 
     this.resizeCanvas();
     this.initEventListeners();
@@ -45,11 +51,17 @@ class Game {
       }
 
       if (event.key === " ") {
+        console.log("Use Energy Drink");
         this.player.inventory.useItem("EnergyDrink", this.player);
       }
 
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && this.gameRunning) {
         // open pause overlay
+        if (this.gamePaused) {
+          this.unpause();
+        } else {
+          this.pause();
+        }
       }
     });
 
@@ -57,9 +69,15 @@ class Game {
     window.addEventListener("keydown", (e) => this.player.handleKeyDown(e));
     window.addEventListener("keyup", (e) => this.player.handleKeyUp(e));
     window.addEventListener("click", () => this.fireProjectile());
-    window.addEventListener("mousemove", (e) =>
-      this.playerWeapon.rotateToCursor(e)
-    );
+    window.addEventListener("mousemove", (e) => {
+      if (this.gameRunning && !this.gamePaused) {
+        this.playerWeapon.rotateToCursor(e);
+      }
+
+      if (this.gameRunning) {
+        this.setCrosshairPosition(e);
+      }
+    });
   }
 
   resizeCanvas() {
@@ -69,6 +87,9 @@ class Game {
 
   startGameLoop() {
     this.gameRunning = true;
+    crosshair.style.display = "flex";
+    document.body.style.cursor = "none";
+
     const loop = () => {
       this.update();
       this.draw();
@@ -79,20 +100,42 @@ class Game {
 
   endGame() {
     this.gameRunning = false;
+    gameOverOverlay.style.display = "flex";
+    crosshair.style.display = "none";
+    document.body.style.cursor = "default";
+    clearInterval(this.enemySpawnIntervalId);
+  }
+
+  pause() {
+    this.gamePaused = true;
+    pauseOverlay.style.display = "flex";
+    clearInterval(this.enemySpawnIntervalId);
+    crosshair.style.display = "none";
+    document.body.style.cursor = "default";
+  }
+
+  unpause() {
+    this.gamePaused = false;
+    pauseOverlay.style.display = "none";
+    this.spawnEnemy();
+    crosshair.style.display = "flex";
+    document.body.style.cursor = "none";
   }
 
   update() {
-    this.player.update();
-    this.projectiles.forEach((projectile) => {
-      projectile.update();
-      if (projectile.isOutOfBounds(this.canvas.width, this.canvas.height)) {
-        projectile.delete();
-      }
-    });
-    this.enemies.forEach((enemy) => {
-      enemy.update();
-    });
-    this.checkCollisions();
+    if (this.gameRunning && !this.gamePaused) {
+      this.player.update();
+      this.projectiles.forEach((projectile) => {
+        projectile.update();
+        if (projectile.isOutOfBounds(this.canvas.width, this.canvas.height)) {
+          projectile.delete();
+        }
+      });
+      this.enemies.forEach((enemy) => {
+        enemy.update();
+      });
+      this.checkCollisions();
+    }
   }
 
   draw() {
@@ -103,20 +146,27 @@ class Game {
     this.enemies.forEach((enemie) => enemie.draw(this.context));
   }
 
+  setCrosshairPosition(e) {
+    crosshair.style.left = `${e.clientX - crosshair.offsetWidth / 2}px`;
+    crosshair.style.top = `${e.clientY - crosshair.offsetHeight / 2}px`;
+  }
+
   fireProjectile() {
-    const projectile = new Projectile(
-      this,
-      this.playerWeapon.x,
-      this.playerWeapon.y,
-      this.playerWeapon.rotation,
-      false,
-      this.playerWeapon.damage
-    );
-    this.projectiles.push(projectile);
+    if (this.gameRunning && !this.gamePaused) {
+      const projectile = new Projectile(
+        this,
+        this.playerWeapon.x,
+        this.playerWeapon.y,
+        this.playerWeapon.rotation,
+        false,
+        this.playerWeapon.damage
+      );
+      this.projectiles.push(projectile);
+    }
   }
 
   spawnEnemy() {
-    setInterval(() => {
+    this.enemySpawnIntervalId = setInterval(() => {
       const enemyType = Math.random() < 0.3 ? MeleeEnemy : RangedEnemy;
       const position = this.randomSpawnPosition();
       this.enemies.push(new enemyType(this, position.x, position.y));
@@ -245,8 +295,14 @@ class Game {
   }
 }
 
-startGameButton.addEventListener("click", () => {
+startGameButton.addEventListener("click", (e) => {
   landingPage.style.display = "none";
   canvas.style.display = "block";
-  new Game();
+  const game = new Game();
+  game.setCrosshairPosition(e);
+});
+
+homeButton.addEventListener("click", () => {
+  gameOverOverlay.style.display = "none";
+  landingPage.style.display = "flex";
 });

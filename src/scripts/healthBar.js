@@ -1,5 +1,5 @@
 class HealthBar {
-  constructor(game, x, y, width, color, maxHealth, currentHealth, placeAbove) {
+  constructor(game, x, y, width, color, maxHealth, currentHealth) {
     this.game = game;
     this.x = x;
     this.y = y;
@@ -8,7 +8,6 @@ class HealthBar {
     this.color = color;
     this.maxHealth = maxHealth;
     this.currentHealth = currentHealth;
-    this.placeAbove = placeAbove;
 
     this.context = game.context;
   }
@@ -16,12 +15,6 @@ class HealthBar {
   update(parentPosition, parentRadius) {
     this.x = parentPosition.x - this.width / 2;
     this.y = parentPosition.y - parentRadius - this.height - 5;
-
-    if (this.placeAbove) {
-      this.y -= parentRadius - 5;
-    } else {
-      this.y = parentRadius + 5;
-    }
   }
 
   draw() {
