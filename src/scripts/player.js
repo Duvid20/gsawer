@@ -19,7 +19,7 @@ class Player {
       60,
       "green",
       this.maxHealth,
-      this.maxHealth,
+      this.maxHealth
     );
     this.collectionRadius = 40;
     this.fireRate = 1;
@@ -41,8 +41,7 @@ class Player {
     if (this.keys["d"] || this.keys["ArrowRight"]) this.x += this.speed;
     if (this.keys["w"] || this.keys["ArrowUp"]) this.y -= this.speed;
     if (this.keys["s"] || this.keys["ArrowDown"]) this.y += this.speed;
-    this.game.playerWeapon.update();
-    this.healthBar.update({ x: this.x, y: this.y }, this.radius);
+    this.healthBar.update(this.x, this.y, this.radius);
   }
 
   draw() {
@@ -51,47 +50,40 @@ class Player {
     this.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     this.context.fill();
 
-    this.game.playerWeapon.draw();
     this.healthBar.draw();
   }
 
-  collectItemsWithinRadius() {
-    const items = this.game.itemManager.getDroppedItems();
-    const playerCenter = getCenterCoordinatesBySelector("#player");
-
-    items.forEach((item) => {
-      const itemCenter = getCenterCoordinates(item.htmlElement);
-      const { distance } = calcDistance(itemCenter, playerCenter);
-
-      if (distance <= this.collectionRadius) {
-        this.inventory.addItem(item);
-        item.collect();
-      }
-    });
+  handleMouseMove(e) {
+    const { left, top } = this.game.canvas.getBoundingClientRect();
+    const mouseX = e.clientX - left;
+    const mouseY = e.clientY - top;
+    this.game.playerWeapon.rotateToPosition({ x: mouseX, y: mouseY });
   }
 
-  increaseFireRate(duration) {
-    this.fireRate *= 2;
-    this.fireRateBoostEndTime = Date.now() + duration * 1000;
-    this.updateFireRateDisplay();
+  move(dx, dy) {
+    this.x += dx;
+    this.y += dy;
+    this.game.updateViewport();
   }
 
-  updateFireRateDisplay() {
-    const remainingTime = Math.max(0, this.fireRateBoostEndTime - Date.now());
-    document.getElementById("fire-rate-timer").innerText = `Boost: ${
-      remainingTime / 1000
-    }s`;
-    if (remainingTime > 0) {
-      setTimeout(() => this.updateFireRateDisplay(), 100);
-    } else {
-      this.fireRate /= 2; // Reset fire rate
-    }
-  }
+  // collectItemsWithinRadius() {
+  //   const items = this.game.itemManager.getDroppedItems();
+  //   const playerCenter = getCenterCoordinatesBySelector("#player");
+
+  //   items.forEach((item) => {
+  //     const itemCenter = getCenterCoordinates(item.htmlElement);
+  //     const { distance } = calcDistance(itemCenter, playerCenter);
+
+  //     if (distance <= this.collectionRadius) {
+  //       this.inventory.addItem(item);
+  //       item.collect();
+  //     }
+  //   });
+  // }
 
   takeDamage(amount) {
     this.health -= amount;
     this.healthBar.decrease(amount);
-    console.log("Player took damage", amount, "health left", this.health);
 
     if (this.health <= 0) {
       this.die();

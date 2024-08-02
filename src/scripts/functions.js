@@ -1,14 +1,3 @@
-export function calculateAngle(a, b, inRadians) {
-  const dx = b.x - a.x;
-  const dy = b.y - a.y;
-  const angleInRadians = Math.atan2(dy, dx);
-
-  if (inRadians) return angleInRadians;
-
-  const angleInDegrees = angleInRadians * (180 / Math.PI);
-  return angleInDegrees;
-}
-
 export function getCenterOfScreen() {
   return {
     x: window.innerWidth / 2,
@@ -178,4 +167,12 @@ export function normalizeVelocity(velocity, speed) {
     velocity.y = (velocity.y / length) * speed;
   }
   return velocity;
+}
+
+export function calculateAngle(x1, y1, x2, y2) {
+  return Math.atan2(y2 - y1, x2 - x1);
+}
+
+export function lerp(start, end, t) {
+  return start + (end - start) * t;
 }

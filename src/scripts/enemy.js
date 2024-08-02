@@ -1,9 +1,10 @@
 import { Projectile } from "./projectile.js";
 import { HealthBar } from "./healthBar.js";
 import { Coin, EnergyDrink } from "./item.js";
+import { calculateAngle } from "./functions.js";
 
 class Enemy {
-  constructor(game, x, y, health, color, damage, speed) {
+  constructor(game, x, y, health, color, damage, speed, attackSpeed) {
     this.game = game;
     this.x = x;
     this.y = y;
@@ -11,6 +12,8 @@ class Enemy {
     this.color = color;
     this.damage = damage;
     this.speed = speed;
+    this.attackSpeed = attackSpeed;
+    this.attackInterval = setInterval(() => this.attack(), attackSpeed);
 
     this.context = game.context;
     this.radius = 15;
@@ -25,9 +28,40 @@ class Enemy {
     );
   }
 
+  attack() {}
+
+  isPlayerInRange() {
+    return this.distanceToPlayer() < this.distance;
+  }
+
+  distanceToPlayer() {
+    return this.game.distanceToPlayer(this.x, this.y);
+  }
+
+  shootProjectile(angle) {
+    const projectile = new Projectile(
+      this.game,
+      this.x,
+      this.y,
+      angle,
+      true,
+      this.damage
+    );
+    this.game.projectiles.push(projectile);
+  }
+
+  calculateAttackAngle() {
+    return calculateAngle(
+      this.x,
+      this.y,
+      this.game.player.x,
+      this.game.player.y
+    );
+  }
+
   update() {
     this.moveTowardsPlayer();
-    this.healthBar.update({ x: this.x, y: this.y }, this.radius);
+    this.healthBar.update(this.x, this.y, this.radius);
   }
 
   moveTowardsPlayer() {
@@ -60,7 +94,7 @@ class Enemy {
   }
 
   die() {
-    // Handle enemy death
+    // handle enemy death
     console.log("Enemy died");
     clearInterval(this.attackInterval);
     this.dropLoot();
@@ -89,17 +123,14 @@ class Enemy {
 
 class MeleeEnemy extends Enemy {
   constructor(game, x, y) {
-    super(game, x, y, 7, "red", 3, 2);
+    super(game, x, y, 7, "red", 3, 2, 0, 0);
     this.speed = 1.5;
     this.distance = 0;
-    this.attackTime = 300;
-    this.attackInterval = setInterval(() => this.attack(), this.attackTime);
     this.drops = [{ drop: Coin, amount: 1, chance: 1 }];
   }
 
   attack() {
-    const distance = this.game.distanceToPlayer(this.x, this.y);
-    if (distance < this.distance) {
+    if (this.distanceToPlayer() < this.distance) {
       console.log("melee enemy attacked");
     }
   }
@@ -107,10 +138,9 @@ class MeleeEnemy extends Enemy {
 
 class RangedEnemy extends Enemy {
   constructor(game, x, y) {
-    super(game, x, y, 4, "pink", 1, 1);
+    super(game, x, y, 4, "pink", 1, 1, 300);
     this.distance = 200;
     this.attackTime = 300;
-    this.attackInterval = setInterval(() => this.attack(), this.attackTime);
     this.drops = [
       { drop: EnergyDrink, amount: 1, chance: 0.5 },
       { drop: Coin, amount: 2, chance: 1 },
@@ -118,21 +148,9 @@ class RangedEnemy extends Enemy {
   }
 
   attack() {
-    const distance = this.game.distanceToPlayer(this.x, this.y);
-    if (distance < this.distance) {
-      const angle = Math.atan2(
-        this.game.player.y - this.y,
-        this.game.player.x - this.x
-      );
-      const projectile = new Projectile(
-        this.game,
-        this.x,
-        this.y,
-        angle,
-        true,
-        this.damage
-      );
-      this.game.projectiles.push(projectile);
+    if (this.isPlayerInRange()) {
+      const angle = this.calculateAttackAngle(this.x, this.y, this.game.player);
+      this.shootProjectile(angle);
     }
   }
 }

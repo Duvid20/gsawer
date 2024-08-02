@@ -12,19 +12,27 @@ class HealthBar {
     this.context = game.context;
   }
 
-  update(parentPosition, parentRadius) {
-    this.x = parentPosition.x - this.width / 2;
-    this.y = parentPosition.y - parentRadius - this.height - 5;
+  update(parentPositionX, parentPositionY, parentRadius) {
+    this.x = parentPositionX - this.width / 2;
+    this.y = parentPositionY - parentRadius - this.height - 5;
   }
 
   draw() {
-    this.context.clearRect(0, 0, this.width, this.height);
+    this.drawBorder();
+    this.fillHealth();
+  }
 
-    // draw border
+  clear() {
+    this.context.clearRect(0, 0, this.width, this.height);
+  }
+
+  drawBorder() {
     this.context.strokeStyle = "white";
     this.context.strokeRect(this.x, this.y, this.width, this.height);
+  }
 
-    // draw health bar
+  fillHealth() {
+    // fill health bar based on current health
     const healthWidth = (this.currentHealth / this.maxHealth) * this.width;
     this.context.fillStyle = this.color;
     this.context.fillRect(this.x, this.y, healthWidth, this.height);
@@ -32,12 +40,12 @@ class HealthBar {
 
   decrease(amount) {
     this.currentHealth = Math.max(0, this.currentHealth - amount);
-    this.draw(this.context);
+    this.draw();
   }
 
   increase(amount) {
     this.currentHealth = Math.min(this.maxHealth, this.currentHealth + amount);
-    this.draw(this.context);
+    this.draw();
   }
 }
 

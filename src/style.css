@@ -87,6 +87,7 @@ body {
 #game-over-text {
   color: red;
   font-size: 80px;
+  opacity: 1;
 }
 
 #game-over-button {
@@ -108,7 +109,6 @@ body {
   right: 10px;
   color: white;
   font-size: 16px;
-  z-index: 2;
 }
 
 #inventory {
@@ -123,7 +123,6 @@ body {
   padding: 10px;
   border: 1px solid white;
   border-radius: 4px;
-  z-index: 1;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -198,106 +197,7 @@ body {
   font-size: 25px;
 }
 
-.dropped-item {
-  position: absolute;
-  font-size: 22px;
-}
-
-/* :root {
-  --d: 2px;
-}
-
-* {
-  font-family: "Courier New", Courier, monospace;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.noselect {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.fit-content {
-  height: fit-content;
-  height: -moz-fit-content;
-  height: -webkit-max-content;
-  height: -moz-max-content;
-  height: max-content;
-  width: fit-content;
-  width: -moz-fit-content;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background: radial-gradient(
-      circle at var(--d) var(--d),
-      #71717a calc(var(--d) - 1px),
-      #09090b var(--d)
-    ) -2px -2px / 16px 16px;
-  font-family: druid-sans, sans-serif;
-}
-
-.classic-look {
-  background-color: black;
-  border: 1px solid white;
-  border-radius: 4px;
-  color: white;
-}
-
-.game-logo {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  align-items: center;
-}
-
-.game-name {
-  color: white;
-  font-size: 90px;
-}
-
-.game-name-decoration {
-  font-size: 40px;
-  color: red;
-}
-
-#landing-overlay {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 20px;
-}
-
-#start-game-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-  width: 100px;
-  font-size: 15px;
-}
-
-#start-game-button:hover {
-  border: 2px solid red;
-  font-weight: bold;
-}
+/*
 
 #pause-overlay {
   color: white;
@@ -315,11 +215,6 @@ body {
   transform: translate(-50%, -50%);
   padding: 20px;
   z-index: 1;
-}
-
-.press-key-info {
-  color: gray;
-  font-size: 13px;
 }
 
 #pause-header {
@@ -348,12 +243,6 @@ body {
   height: 100vh;
 }
 
-#crosshair {
-  display: none;
-  position: absolute;
-  color: white;
-}
-
 .projectile {
   position: absolute;
   background-color: red;
@@ -374,34 +263,6 @@ body {
 
 .ranged-enemy {
   background-color: rgb(225, 182, 182);
-}
-
-.health-bar-container {
-  position: absolute;
-  border-radius: 2px;
-  border: 1px solid white;
-  display: flex;
-  justify-content: start;
-}
-
-.health-bar-progress {
-  position: absolute;
-  border-radius: 2px;
-}
-
-.coin-dropped {
-  color: gold;
-  text-shadow: 1px 1px 1px yellow;
-}
-
-.energy-drink-dropped {
-  color: green;
-  text-shadow: 1px 1px 1px lime;
-}
-
-.dropped-item {
-  position: absolute;
-  font-size: 22px;
 }
 
 #inventory {

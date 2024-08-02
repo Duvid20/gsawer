@@ -1,3 +1,5 @@
+import { Item } from "./item.js";
+
 class ItemManager {
   constructor(game) {
     this.game = game;
@@ -14,7 +16,6 @@ class ItemManager {
       }
       this.items.push(item);
     }
-    console.log("Items created", this.items);
   }
 
   getDroppedItems() {
