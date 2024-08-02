@@ -1,67 +1,50 @@
 class HealthBar {
-  constructor({
-    width,
-    height,
-    color,
-    maxHealth,
-    currentHealth,
-    placeAbove,
-    parentElement,
-  }) {
+  constructor(game, x, y, width, color, maxHealth, currentHealth, placeAbove) {
+    this.game = game;
+    this.x = x;
+    this.y = y;
+    this.height = parseInt(width / 8);
     this.width = width;
-    this.height = height;
     this.color = color;
     this.maxHealth = maxHealth;
     this.currentHealth = currentHealth;
     this.placeAbove = placeAbove;
-    this.parentElement = parentElement;
 
-    this.canvas = document.createElement("canvas");
-    this.canvas.width = width;
-    this.canvas.height = height;
-    this.context = this.canvas.getContext("2d");
-
-    this.updatePosition();
-    this.draw();
+    this.context = game.context;
   }
 
-  updatePosition() {
-    const parentRect = this.parentElement.getBoundingClientRect();
-    const parentCenterX = parentRect.left + parentRect.width / 2;
-    const parentCenterY = parentRect.top + parentRect.height / 2;
-
-    this.canvas.style.position = "absolute";
-    this.canvas.style.left = `${parentCenterX - this.width / 2}px`;
+  update(parentPosition, parentRadius) {
+    this.x = parentPosition.x - this.width / 2;
+    this.y = parentPosition.y - parentRadius - this.height - 5;
 
     if (this.placeAbove) {
-      this.canvas.style.top = `${parentRect.top - this.height - 5}px`;
+      this.y -= parentRadius - 5;
     } else {
-      this.canvas.style.top = `${parentRect.bottom + 5}px`;
+      this.y = parentRadius + 5;
     }
   }
 
   draw() {
-    const ctx = this.context;
-    ctx.clearRect(0, 0, this.width, this.height);
+    this.context.clearRect(0, 0, this.width, this.height);
 
-    // Draw border
-    ctx.strokeStyle = "white";
-    ctx.strokeRect(0, 0, this.width, this.height);
+    // draw border
+    this.context.strokeStyle = "white";
+    this.context.strokeRect(this.x, this.y, this.width, this.height);
 
-    // Draw health bar
+    // draw health bar
     const healthWidth = (this.currentHealth / this.maxHealth) * this.width;
-    ctx.fillStyle = this.color;
-    ctx.fillRect(0, 0, healthWidth, this.height);
+    this.context.fillStyle = this.color;
+    this.context.fillRect(this.x, this.y, healthWidth, this.height);
   }
 
   decrease(amount) {
     this.currentHealth = Math.max(0, this.currentHealth - amount);
-    this.draw();
+    this.draw(this.context);
   }
 
   increase(amount) {
     this.currentHealth = Math.min(this.maxHealth, this.currentHealth + amount);
-    this.draw();
+    this.draw(this.context);
   }
 }
 

@@ -1,16 +1,34 @@
 import { Projectile } from "./projectile.js";
+import { HealthBar } from "./healthBar.js";
 import { Coin, EnergyDrink } from "./item.js";
 
 class Enemy {
-  constructor(game, x, y) {
+  constructor(game, x, y, health, color, damage, speed) {
     this.game = game;
     this.x = x;
     this.y = y;
+    this.health = health;
+    this.color = color;
+    this.damage = damage;
+    this.speed = speed;
+
+    this.context = game.context;
     this.radius = 15;
+    this.healthBar = new HealthBar(
+      game,
+      x,
+      y,
+      60,
+      "red",
+      this.health,
+      this.health,
+      true
+    );
   }
 
   update() {
     this.moveTowardsPlayer();
+    this.healthBar.update({ x: this.x, y: this.y }, this.radius);
   }
 
   moveTowardsPlayer() {
@@ -25,16 +43,17 @@ class Enemy {
     }
   }
 
-  draw(context) {
-    context.fillStyle = "red";
-    context.beginPath();
-    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    context.fill();
+  draw() {
+    this.context.fillStyle = this.color;
+    this.context.beginPath();
+    this.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    this.context.fill();
+
+    this.healthBar.draw();
   }
 
   takeDamage(amount) {
     this.health -= amount;
-    console.log("Enemy health", this.health);
     if (this.health <= 0) {
       this.die(this.game);
     }
@@ -44,8 +63,14 @@ class Enemy {
   die() {
     // Handle enemy death
     console.log("Enemy died");
-    this.dropLoot(this.game);
+    clearInterval(this.attackInterval);
+    this.dropLoot();
     this.game.enemiesKilled++;
+    this.delete();
+  }
+
+  delete() {
+    this.game.enemies = this.game.enemies.filter((enemy) => enemy !== this);
   }
 
   dropLoot() {
@@ -53,7 +78,7 @@ class Enemy {
       if (Math.random() <= drop.chance) {
         this.game.itemManager.createItems(
           drop.drop,
-          getCenterCoordinates(this.htmlElement),
+          { x: this.x, y: this.y },
           drop.amount,
           false
         );
@@ -65,7 +90,7 @@ class Enemy {
 
 class MeleeEnemy extends Enemy {
   constructor(game, x, y) {
-    super(game, x, y);
+    super(game, x, y, 3, "red", 3, 2);
     this.speed = 2;
     this.distance = 0;
     this.attackTime = 300;
@@ -83,8 +108,7 @@ class MeleeEnemy extends Enemy {
 
 class RangedEnemy extends Enemy {
   constructor(game, x, y) {
-    super(game, x, y);
-    this.speed = 1;
+    super(game, x, y, 2, "pink", 1, 1);
     this.distance = 200;
     this.attackTime = 300;
     this.attackInterval = setInterval(() => this.attack(), this.attackTime);
@@ -101,7 +125,14 @@ class RangedEnemy extends Enemy {
         this.game.player.y - this.y,
         this.game.player.x - this.x
       );
-      const projectile = new Projectile(this.x, this.y, angle);
+      const projectile = new Projectile(
+        this.game,
+        this.x,
+        this.y,
+        angle,
+        true,
+        this.damage
+      );
       this.game.projectiles.push(projectile);
     }
   }

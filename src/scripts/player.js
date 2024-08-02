@@ -3,12 +3,25 @@ import { HealthBar } from "./healthBar.js";
 
 class Player {
   constructor(game, x, y) {
+    this.game = game;
+    this.context = game.context;
     this.x = x;
     this.y = y;
-    this.height = this.width = 30;
+    this.maxHealth = 100;
+    this.health = this.maxHealth;
+    this.radius = 20;
     this.speed = 5;
-    this.game = game;
     this.inventory = new Inventory();
+    this.healthBar = new HealthBar(
+      game,
+      x,
+      y,
+      60,
+      "green",
+      this.maxHealth,
+      this.maxHealth,
+      false
+    );
     this.collectionRadius = 40;
     this.fireRate = 1;
     this.fireRateBoostEndTime = 0;
@@ -30,12 +43,17 @@ class Player {
     if (this.keys["w"] || this.keys["ArrowUp"]) this.y -= this.speed;
     if (this.keys["s"] || this.keys["ArrowDown"]) this.y += this.speed;
     this.game.playerWeapon.update();
+    this.healthBar.update({ x: this.x, y: this.y }, this.radius);
   }
 
-  draw(context) {
-    context.fillStyle = "blue";
-    context.fillRect(this.x - 15, this.y - 15, this.width, this.height);
-    this.game.playerWeapon.draw(context);
+  draw() {
+    this.context.fillStyle = "blue";
+    this.context.beginPath();
+    this.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    this.context.fill();
+
+    this.game.playerWeapon.draw();
+    this.healthBar.draw();
   }
 
   collectItemsWithinRadius() {
@@ -69,6 +87,20 @@ class Player {
     } else {
       this.fireRate = 1; // Reset fire rate
     }
+  }
+
+  takeDamage(amount) {
+    this.health -= amount;
+    this.healthBar.decrease(amount);
+    console.log("Player took damage", amount, "health left", this.health);
+
+    if (this.health <= 0) {
+      this.die();
+    }
+  }
+
+  die() {
+    this.game.endGame();
   }
 }
 

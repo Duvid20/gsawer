@@ -39,25 +39,35 @@ class Item {
     this.htmlElement = itemElement;
   }
 
-  collect() {
-    this.inInventory = true;
-    this.deleteHtmlElement();
-  }
-
-  drop() {
-    this.inInventory = false;
-    this.instantiateHtmlElement();
-  }
-
   deleteHtmlElement() {
     this.htmlElement.remove();
     console.log(this.htmlElement.innerHTML + " deleted");
     this.htmlElement = null;
   }
 
+  collect() {
+    this.inInventory = true;
+    this.deleteHtmlElement();
+  }
+
+  drop(position) {
+    this.inInventory = false;
+    this.instantiateHtmlElement(position);
+  }
+
   delete() {
     deleteHtmlElement();
     this.game.itemManager.removeItem(this);
+  }
+
+  draw() {
+    if (this.inInventory) {
+      this.htmlElement.classList.remove(this.cssClassDropped);
+      this.htmlElement.classList.add(this.cssClassInventory);
+    } else {
+      this.htmlElement.classList.remove(this.cssClassInventory);
+      this.htmlElement.classList.add(this.cssClassDropped);
+    }
   }
 }
 
@@ -66,9 +76,7 @@ class Coin extends Item {
     super(game, "Coin", "©", "coin-dropped", "coin-inventory", inInventory);
   }
 
-  use() {
-    // increase score
-  }
+  use() {}
 }
 
 class EnergyDrink extends Item {

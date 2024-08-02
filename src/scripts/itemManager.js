@@ -9,10 +9,12 @@ class ItemManager {
     for (let i = 0; i < amount; i++) {
       const item = new itemType(this.game, inInventory);
       if (!item.inInventory) {
-        item.instantiateHtmlElement(position);
+        // create Item Canvas element
+        item.drop(position);
       }
       this.items.push(item);
     }
+    console.log("Items created", this.items);
   }
 
   getDroppedItems() {

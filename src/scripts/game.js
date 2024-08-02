@@ -3,7 +3,6 @@ import { Projectile } from "./projectile.js";
 import { MeleeEnemy, RangedEnemy } from "./enemy.js";
 import { Weapon } from "./weapon.js";
 import { ItemManager } from "./itemManager.js";
-import { getBoundingBox } from "./functions.js";
 
 const startGameButton = document.getElementById("start-game-button");
 const landingPage = document.getElementById("landing-page");
@@ -27,11 +26,11 @@ class Game {
       this.canvas.width / 2,
       this.canvas.height / 2
     );
-    this.playerWeapon = new Weapon(this, this.player);
+    this.playerWeapon = new Weapon(this, this.player, 1);
     this.itemManager = new ItemManager(this);
     this.projectiles = [];
     this.enemies = [];
-    this.enemySpawnInterval = 5000;
+    this.enemySpawnInterval = 2000;
     this.enemiesKilled = 0;
 
     this.resizeCanvas();
@@ -84,10 +83,10 @@ class Game {
 
   update() {
     this.player.update();
-    this.projectiles.forEach((projectile, index) => {
+    this.projectiles.forEach((projectile) => {
       projectile.update();
       if (projectile.isOutOfBounds(this.canvas.width, this.canvas.height)) {
-        this.projectiles.splice(index, 1);
+        projectile.delete();
       }
     });
     this.enemies.forEach((enemy) => {
@@ -100,15 +99,18 @@ class Game {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.player.draw(this.context);
-    this.projectiles.forEach((projectile) => projectile.draw(this.context));
+    this.projectiles.forEach((projectile) => projectile.draw());
     this.enemies.forEach((enemie) => enemie.draw(this.context));
   }
 
   fireProjectile() {
     const projectile = new Projectile(
+      this,
       this.playerWeapon.x,
       this.playerWeapon.y,
-      this.playerWeapon.rotation
+      this.playerWeapon.rotation,
+      false,
+      this.playerWeapon.damage
     );
     this.projectiles.push(projectile);
   }
@@ -160,14 +162,14 @@ class Game {
 
   isColliding(element1, element2) {
     // Helper function to check AABB collision
-    function isAABBColliding(rect1, rect2) {
-      return (
-        rect1.x < rect2.x + rect2.width &&
-        rect1.x + rect1.width > rect2.x &&
-        rect1.y < rect2.y + rect2.height &&
-        rect1.y + rect1.height > rect2.y
-      );
-    }
+    // function isAABBColliding(rect1, rect2) {
+    //   return (
+    //     rect1.x < rect2.x + rect2.width &&
+    //     rect1.x + rect1.width > rect2.x &&
+    //     rect1.y < rect2.y + rect2.height &&
+    //     rect1.y + rect1.height > rect2.y
+    //   );
+    // }
 
     // Helper function to check circle-circle collision
     function isCircleColliding(circle1, circle2) {
@@ -178,63 +180,68 @@ class Game {
     }
 
     // Helper function to check rectangle-circle collision
-    function isRectCircleColliding(rect, circle) {
-      const distX = Math.abs(circle.x - rect.x - rect.width / 2);
-      const distY = Math.abs(circle.y - rect.y - rect.height / 2);
+    // function isRectCircleColliding(rect, circle) {
+    //   const distX = Math.abs(circle.x - rect.x - rect.width / 2);
+    //   const distY = Math.abs(circle.y - rect.y - rect.height / 2);
 
-      if (distX > rect.width / 2 + circle.radius) {
-        return false;
-      }
-      if (distY > rect.height / 2 + circle.radius) {
-        return false;
-      }
+    //   if (distX > rect.width / 2 + circle.radius) {
+    //     return false;
+    //   }
+    //   if (distY > rect.height / 2 + circle.radius) {
+    //     return false;
+    //   }
 
-      if (distX <= rect.width / 2) {
-        return true;
-      }
-      if (distY <= rect.height / 2) {
-        return true;
-      }
+    //   if (distX <= rect.width / 2) {
+    //     return true;
+    //   }
+    //   if (distY <= rect.height / 2) {
+    //     return true;
+    //   }
 
-      const dx = distX - rect.width / 2;
-      const dy = distY - rect.height / 2;
-      return dx * dx + dy * dy <= circle.radius * circle.radius;
-    }
+    //   const dx = distX - rect.width / 2;
+    //   const dy = distY - rect.height / 2;
+    //   return dx * dx + dy * dy <= circle.radius * circle.radius;
+    // }
 
     // Determine the type of each element
-    const isElement1Arc = element1.radius !== undefined;
-    const isElement2Arc = element2.radius !== undefined;
 
-    if (!isElement1Arc && !isElement2Arc) {
-      // Both elements are rectangles
-      return isAABBColliding(element1, element2);
-    } else if (isElement1Arc && isElement2Arc) {
-      // Both elements are circles
-      return isCircleColliding(element1, element2);
-    } else {
-      // One element is a rectangle and the other is a circle
-      const rect = isElement1Arc ? element2 : element1;
-      const circle = isElement1Arc ? element1 : element2;
-      return isRectCircleColliding(rect, circle);
-    }
+    // const isElement1Arc = element1.radius !== undefined;
+    // const isElement2Arc = element2.radius !== undefined;
+
+    // if (!isElement1Arc && !isElement2Arc) {
+    //   // Both elements are rectangles
+    //   return isAABBColliding(element1, element2);
+    // } else if (isElement1Arc && isElement2Arc) {
+    // Both elements are circles
+    return isCircleColliding(element1, element2);
+    // } else {
+    //   // One element is a rectangle and the other is a circle
+    //   const rect = isElement1Arc ? element2 : element1;
+    //   const circle = isElement1Arc ? element1 : element2;
+    //   return isRectCircleColliding(rect, circle);
+    // }
   }
 
   handlePlayerEnemyCollision(enemy) {
     console.log("Player collided with enemy");
     this.player.takeDamage(enemy.damage);
-    enemy.die(this);
+    enemy.die();
   }
 
   handlePlayerProjectileCollision(projectile) {
-    console.log("Player hit by projectile");
-    this.player.takeDamage(projectile.damage);
-    projectile.htmlElement.remove();
+    if (projectile.fromEnemy) {
+      console.log("Player hit by projectile");
+      projectile.delete();
+      this.player.takeDamage(projectile.damage);
+    }
   }
 
   handleProjectileEnemyCollision(projectile, enemy) {
-    console.log("Projectile collided with enemy");
-    enemy.takeDamage(1);
-    projectile.htmlElement.remove();
+    if (!projectile.fromEnemy) {
+      console.log("Projectile collided with enemy");
+      projectile.delete();
+      enemy.takeDamage(projectile.damage);
+    }
   }
 }
 
