@@ -66,21 +66,6 @@ class Player {
     this.game.updateViewport();
   }
 
-  // collectItemsWithinRadius() {
-  //   const items = this.game.itemManager.getDroppedItems();
-  //   const playerCenter = getCenterCoordinatesBySelector("#player");
-
-  //   items.forEach((item) => {
-  //     const itemCenter = getCenterCoordinates(item.htmlElement);
-  //     const { distance } = calcDistance(itemCenter, playerCenter);
-
-  //     if (distance <= this.collectionRadius) {
-  //       this.inventory.addItem(item);
-  //       item.collect();
-  //     }
-  //   });
-  // }
-
   takeDamage(amount) {
     this.health -= amount;
     this.healthBar.decrease(amount);

@@ -10,6 +10,8 @@ class Item {
     this.color = color;
     this.inInventory = inInventory;
     this.htmlElement;
+    this.x = 0;
+    this.y = 0;
   }
 
   draw() {
@@ -17,25 +19,27 @@ class Item {
     this.context.textAlign = "center";
     this.context.textBaseline = "middle";
     this.context.fillStyle = this.color;
-    this.context.fillText(this.symbol, this.position.x, this.position.y);
+    this.context.fillText(this.symbol, this.x, this.y);
   }
 
   drop(position) {
     this.inInventory = false;
-    this.position = randomPositionInArea(
+    const randomPosition = randomPositionInArea(
       position,
       this.game.itemManager.dropRadius
     );
+
+    this.x = randomPosition.x;
+    this.y = randomPosition.y;
+
     this.draw();
   }
 
   collect() {
     this.inInventory = true;
-    this.deleteHtmlElement();
   }
 
   delete() {
-    this.deleteHtmlElement();
     this.game.itemManager.removeItem(this);
   }
 }

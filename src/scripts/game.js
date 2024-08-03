@@ -180,8 +180,11 @@ class Game {
   }
 
   drawItems() {
-    console.log("Drawing items", this.itemManager.items);
-    this.itemManager.items.forEach((item) => item.draw());
+    this.itemManager.items.forEach((item) => {
+      if (!item.inInventory) {
+        item.draw();
+      }
+    });
   }
 
   draw() {
@@ -297,6 +300,7 @@ class Game {
   checkCollisions() {
     this.checkPlayerEnemyCollisions();
     this.checkProjectileCollisions();
+    this.checkPlayerItemCollisions();
   }
 
   checkPlayerEnemyCollisions() {
@@ -319,6 +323,14 @@ class Game {
         if (this.isColliding(this.player, projectile)) {
           this.handlePlayerProjectileCollision(projectile);
         }
+      }
+    });
+  }
+
+  checkPlayerItemCollisions() {
+    this.itemManager.items.forEach((item) => {
+      if (this.isColliding(this.player, item)) {
+        this.handlePlayerItemCollision(item);
       }
     });
   }
@@ -405,6 +417,10 @@ class Game {
       projectile.delete();
       enemy.takeDamage(projectile.damage);
     }
+  }
+
+  handlePlayerItemCollision(item) {
+    item.collect();
   }
 }
 
