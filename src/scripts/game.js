@@ -3,6 +3,7 @@ import { Projectile } from "./projectile.js";
 import { MeleeEnemy, RangedEnemy } from "./enemy.js";
 import { Weapon } from "./weapon.js";
 import { ItemManager } from "./itemManager.js";
+import { Inventory } from "./inventory.js";
 
 const startGameButton = document.getElementById("start-game-button");
 const landingPage = document.getElementById("landing-page");
@@ -49,6 +50,7 @@ class Game {
       this.canvas.height / 2
     );
     this.playerWeapon = new Weapon(this, this.player, 1);
+    this.inventory = new Inventory(this);
 
     this.initEventListeners();
     this.startGameLoop();
@@ -57,18 +59,35 @@ class Game {
   initEventListeners() {
     document.addEventListener("keydown", (e) => {
       this.player.handleKeyDown(e);
-      if (e.key === "e") {
-        this.player.inventory.toggle();
+      if (e.key === "e" && this.gameRunning) {
+        if (this.inventory.isOpen) {
+          this.inventory.close();
+          this.unpause();
+        } else {
+          this.inventory.open();
+          this.pause();
+          pauseOverlay.style.display = "none";
+        }
       }
 
-      if (e.key === " ") {
+      if (e.key === " " && this.gameRunning && !this.gamePaused) {
         console.log("Use Energy Drink");
         this.player.inventory.useItem("EnergyDrink", this.player);
       }
 
       if (e.key === "Escape" && this.gameRunning) {
-        // open pause overlay
-        if (this.gamePaused ? this.unpause() : this.pause());
+        console.log("Escape pressed");
+
+        // pause
+        if (this.gamePaused) {
+          this.unpause();
+          pauseOverlay.style.display = "none";
+          this.inventory.close();
+        } else {
+          this.pause();
+          this.inventory.close();
+          pauseOverlay.style.display = "flex";
+        }
       }
     });
 
@@ -132,7 +151,6 @@ class Game {
 
   pause() {
     this.gamePaused = true;
-    pauseOverlay.style.display = "flex";
     clearInterval(this.enemySpawnIntervalId);
     crosshair.style.display = "none";
     document.body.style.cursor = "default";
@@ -180,10 +198,8 @@ class Game {
   }
 
   drawItems() {
-    this.itemManager.items.forEach((item) => {
-      if (!item.inInventory) {
-        item.draw();
-      }
+    this.itemManager.getDroppedItems().forEach((item) => {
+      item.draw();
     });
   }
 
@@ -398,14 +414,12 @@ class Game {
   }
 
   handlePlayerEnemyCollision(enemy) {
-    console.log("Player collided with enemy");
     this.player.takeDamage(enemy.damage);
     enemy.die();
   }
 
   handlePlayerProjectileCollision(projectile) {
     if (projectile.fromEnemy) {
-      console.log("Player hit by projectile");
       projectile.delete();
       this.player.takeDamage(projectile.damage);
     }
@@ -413,7 +427,6 @@ class Game {
 
   handleProjectileEnemyCollision(projectile, enemy) {
     if (!projectile.fromEnemy) {
-      console.log("Projectile collided with enemy");
       projectile.delete();
       enemy.takeDamage(projectile.damage);
     }
@@ -421,6 +434,7 @@ class Game {
 
   handlePlayerItemCollision(item) {
     item.collect();
+    console.log("Item collected:", item.name);
   }
 }
 

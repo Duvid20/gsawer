@@ -1,6 +1,7 @@
 class Inventory {
-  constructor() {
-    this.items = {};
+  constructor(game) {
+    this.game = game;
+    this.isOpen = false;
     this.inventoryElement = document.getElementById("inventory");
     this.inventoryBodyElement = document.getElementById("inventory-body");
   }
@@ -15,21 +16,26 @@ class Inventory {
 
   updateInventoryDisplay() {
     this.inventoryBodyElement.innerHTML = "";
-    for (const itemName in this.items) {
-      const item = this.items[itemName];
-      const itemElement = document.createElement("div");
-      itemElement.className = "inventory-item";
-      itemElement.innerText = `${item.item.symbol} x${item.count}`;
-      this.inventoryElement.appendChild(itemElement);
+    const items = this.game.itemManager.getInventoryItems();
+    for (const item of items) {
+      if (item.inInventory) {
+        const itemElement = document.createElement("div");
+        itemElement.className = "inventory-item " + item.className;
+        itemElement.innerText = `${item.symbol} x${item.count}`;
+        this.inventoryElement.appendChild(itemElement);
+      }
     }
   }
 
-  toggle() {
-    if (this.inventoryBodyElement.style.display === "none") {
-      this.inventoryBodyElement.style.display = "flex";
-    } else {
-      this.inventoryBodyElement.style.display = "none";
-    }
+  open() {
+    this.inventoryElement.style.display = "flex";
+    this.isOpen = true;
+    this.updateInventoryDisplay();
+  }
+
+  close() {
+    this.inventoryElement.style.display = "none";
+    this.isOpen = false;
   }
 }
 

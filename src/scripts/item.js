@@ -12,9 +12,17 @@ class Item {
     this.htmlElement;
     this.x = 0;
     this.y = 0;
+    this.radius = 7;
   }
 
   draw() {
+    // Draw the white circle
+    this.context.fillStyle = "white";
+    this.context.beginPath();
+    this.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    this.context.fill();
+
+    // Draw the symbol text
     this.context.font = "22px Courier New";
     this.context.textAlign = "center";
     this.context.textBaseline = "middle";

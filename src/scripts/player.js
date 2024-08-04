@@ -1,4 +1,3 @@
-import { Inventory } from "./inventory.js";
 import { HealthBar } from "./healthBar.js";
 
 class Player {
@@ -11,7 +10,6 @@ class Player {
     this.health = this.maxHealth;
     this.radius = 20;
     this.speed = 5;
-    this.inventory = new Inventory();
     this.healthBar = new HealthBar(
       game,
       x,

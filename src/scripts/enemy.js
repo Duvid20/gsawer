@@ -95,7 +95,6 @@ class Enemy {
 
   die() {
     // handle enemy death
-    console.log("Enemy died");
     clearInterval(this.attackInterval);
     this.dropLoot();
     this.game.enemiesKilled++;
@@ -117,7 +116,6 @@ class Enemy {
         );
       }
     });
-    console.log("Loot dropped");
   }
 }
 
