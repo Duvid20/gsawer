@@ -156,7 +156,7 @@ class RangedEnemy extends Enemy {
 
 class PoisonEnemy extends Enemy {
   constructor(game, x, y) {
-    super(game, x, y, 10, "purple", 2, 1, 500);
+    super(game, x, y, 1, "purple", 2, 1, 500);
     this.distance = 50;
     this.drops = [{ drop: Coin, amount: 2, chance: 1 }];
     this.poisonArea = new PoisonArea(

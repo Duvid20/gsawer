@@ -29,7 +29,7 @@ class Player {
       game,
       this.x,
       this.y,
-      100,
+      30,
       "gray",
       0.2
     );
@@ -55,6 +55,7 @@ class Player {
     if (this.y < 0) this.y = 0;
     if (this.y > this.game.canvas.height) this.y = this.game.canvas.height;
 
+    // update health bar and collection area
     this.healthBar.update(this.x, this.y, this.radius);
     this.collectionArea.update(this.x, this.y);
   }

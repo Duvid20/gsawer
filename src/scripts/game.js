@@ -295,16 +295,15 @@ class Game {
   spawnEnemy() {
     this.enemySpawnIntervalId = setInterval(() => {
       let enemyType;
-      // if (Math.random() < 1 / 3) {
-      //   if (Math.random() < 0.5) {
-      //     enemyType = MeleeEnemy;
-      //   } else {
-      //     enemyType = RangedEnemy;
-      //   }
-      // } else {
-      //   enemyType = MeleeEnemy;
-      // }
-      enemyType = PoisonEnemy;
+      if (Math.random() < 1 / 3) {
+        if (Math.random() < 0.5) {
+          enemyType = MeleeEnemy;
+        } else {
+          enemyType = RangedEnemy;
+        }
+      } else {
+        enemyType = MeleeEnemy;
+      }
       const position = this.randomSpawnPosition();
       this.enemies.push(new enemyType(this, position.x, position.y));
     }, this.enemySpawnInterval);
