@@ -17,7 +17,7 @@ export function elementDisplayFlex(element) {
   element.style.display = "flex";
 }
 
-export function createElementWithClass(type, className, id, textContent) {
+export function createHtmlElement(type, className, id, textContent) {
   const element = document.createElement(type);
   if (className) element.className = className;
   if (id) element.id = id;
@@ -78,20 +78,7 @@ export function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function calcOffsetOfCenter(selector) {
-  const element = document.querySelector(selector);
 
-  const centerPosition = getCenterCoordinates(selector);
-  const rect = element.getBoundingClientRect();
-
-  const elementPos = { x: rect.left, y: rect.top };
-  const offset = {
-    x: centerPosition.x - elementPos.x,
-    y: centerPosition.y - elementPos.y,
-  };
-
-  return offset;
-}
 
 export function randomPositionInArea(position, radius) {
   return {

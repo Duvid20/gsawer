@@ -41,7 +41,6 @@ class Game {
     this.itemManager = new ItemManager(this);
     this.projectiles = [];
     this.enemies = [];
-    this.enemySpawnInterval = 700;
     this.enemiesKilled = 0;
     this.enemySpawnIntervalId = null;
     this.player = new Player(
@@ -294,19 +293,18 @@ class Game {
 
   spawnEnemy() {
     this.enemySpawnIntervalId = setInterval(() => {
-      let enemyType;
-      if (Math.random() < 1 / 3) {
-        if (Math.random() < 0.5) {
-          enemyType = MeleeEnemy;
-        } else {
-          enemyType = RangedEnemy;
-        }
-      } else {
-        enemyType = MeleeEnemy;
-      }
+      let enemyType = this.randomEnemyType();
       const position = this.randomSpawnPosition();
       this.enemies.push(new enemyType(this, position.x, position.y));
-    }, this.enemySpawnInterval);
+    }, this.calcEnemySpawnInterval());
+  }
+
+  randomEnemyType() {
+    return Math.random() < 1 / 3
+      ? Math.random() < 0.5
+        ? MeleeEnemy
+        : RangedEnemy
+      : PoisonEnemy;
   }
 
   randomSpawnPosition() {
@@ -316,6 +314,10 @@ class Game {
       y = Math.random() * this.canvas.height;
     } while (this.distanceToPlayer(x, y) < 500);
     return { x, y };
+  }
+
+  calcEnemySpawnInterval() {
+    return Math.max(500, 2000 - this.enemiesKilled * 10);
   }
 
   distanceToPlayer(x, y) {

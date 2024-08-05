@@ -1,3 +1,5 @@
+import { createHtmlElement } from "./functions.js";
+
 class Inventory {
   constructor(game) {
     this.game = game;
@@ -31,9 +33,13 @@ class Inventory {
   }
 
   createInventoryElement(item, count) {
-    const element = document.createElement("div");
-    element.className = "inventory-item " + item.className;
-    element.innerText = `${item.symbol} x${count}`;
+    const classes = "inventory-item " + item.className;
+    const element = createHtmlElement(
+      "div",
+      classes,
+      "",
+      item.symbol + " x" + count
+    );
     return element;
   }
 
