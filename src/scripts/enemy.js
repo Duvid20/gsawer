@@ -186,6 +186,11 @@ class PoisonEnemy extends Enemy {
     super.draw();
     this.poisonArea.draw();
   }
+
+  delete() {
+    super.delete();
+    this.poisonArea.destroy();
+  }
 }
 
 export { MeleeEnemy, RangedEnemy, PoisonEnemy };
