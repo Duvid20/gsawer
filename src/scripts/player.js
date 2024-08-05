@@ -1,4 +1,5 @@
 import { HealthBar } from "./healthBar.js";
+import { CollidableArea } from "./collideableArea.js";
 
 class Player {
   constructor(game, x, y) {
@@ -10,6 +11,11 @@ class Player {
     this.health = this.maxHealth;
     this.radius = 20;
     this.speed = 5;
+    this.collectionRadius = 40;
+    this.fireRate = 1;
+    this.fireRateBoostEndTime = 0;
+    this.keys = {};
+
     this.healthBar = new HealthBar(
       game,
       x,
@@ -19,11 +25,14 @@ class Player {
       this.maxHealth,
       this.maxHealth
     );
-    this.collectionRadius = 40;
-    this.fireRate = 1;
-    this.fireRateBoostEndTime = 0;
-
-    this.keys = {};
+    this.collectionArea = new CollidableArea(
+      game,
+      this.x,
+      this.y,
+      100,
+      "gray",
+      0.2
+    );
   }
 
   handleKeyDown(e) {
@@ -39,7 +48,15 @@ class Player {
     if (this.keys["d"] || this.keys["ArrowRight"]) this.x += this.speed;
     if (this.keys["w"] || this.keys["ArrowUp"]) this.y -= this.speed;
     if (this.keys["s"] || this.keys["ArrowDown"]) this.y += this.speed;
+
+    // player cannot leave viewport
+    if (this.x < 0) this.x = 0;
+    if (this.x > this.game.canvas.width) this.x = this.game.canvas.width;
+    if (this.y < 0) this.y = 0;
+    if (this.y > this.game.canvas.height) this.y = this.game.canvas.height;
+
     this.healthBar.update(this.x, this.y, this.radius);
+    this.collectionArea.update(this.x, this.y);
   }
 
   draw() {
@@ -49,6 +66,7 @@ class Player {
     this.context.fill();
 
     this.healthBar.draw();
+    this.collectionArea.draw();
   }
 
   handleMouseMove(e) {

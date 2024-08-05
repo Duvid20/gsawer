@@ -1,6 +1,6 @@
 import { Player } from "./player.js";
 import { Projectile } from "./projectile.js";
-import { MeleeEnemy, RangedEnemy } from "./enemy.js";
+import { MeleeEnemy, RangedEnemy, PoisonEnemy } from "./enemy.js";
 import { Weapon } from "./weapon.js";
 import { ItemManager } from "./itemManager.js";
 import { Inventory } from "./inventory.js";
@@ -294,7 +294,17 @@ class Game {
 
   spawnEnemy() {
     this.enemySpawnIntervalId = setInterval(() => {
-      const enemyType = Math.random() < 0.3 ? MeleeEnemy : RangedEnemy;
+      let enemyType;
+      // if (Math.random() < 1 / 3) {
+      //   if (Math.random() < 0.5) {
+      //     enemyType = MeleeEnemy;
+      //   } else {
+      //     enemyType = RangedEnemy;
+      //   }
+      // } else {
+      //   enemyType = MeleeEnemy;
+      // }
+      enemyType = PoisonEnemy;
       const position = this.randomSpawnPosition();
       this.enemies.push(new enemyType(this, position.x, position.y));
     }, this.enemySpawnInterval);
@@ -345,7 +355,7 @@ class Game {
 
   checkPlayerItemCollisions() {
     this.itemManager.items.forEach((item) => {
-      if (this.isColliding(this.player, item)) {
+      if (this.isColliding(this.player.collectionArea, item)) {
         this.handlePlayerItemCollision(item);
       }
     });

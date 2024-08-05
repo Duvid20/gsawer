@@ -2,6 +2,7 @@ import { Projectile } from "./projectile.js";
 import { HealthBar } from "./healthBar.js";
 import { Coin, EnergyDrink } from "./item.js";
 import { calculateAngle } from "./functions.js";
+import { PoisonArea } from "./collideableArea.js";
 
 class Enemy {
   constructor(game, x, y, health, color, damage, speed, attackSpeed) {
@@ -153,4 +154,38 @@ class RangedEnemy extends Enemy {
   }
 }
 
-export { MeleeEnemy, RangedEnemy };
+class PoisonEnemy extends Enemy {
+  constructor(game, x, y) {
+    super(game, x, y, 10, "purple", 2, 1, 500);
+    this.distance = 50;
+    this.drops = [{ drop: Coin, amount: 2, chance: 1 }];
+    this.poisonArea = new PoisonArea(
+      game,
+      this.x,
+      this.y,
+      this.distance + 10,
+      "green",
+      this.damage,
+      this.attackSpeed,
+      [game.player]
+    );
+  }
+
+  attack() {
+    if (this.isPlayerInRange()) {
+      this.game.player.takeDamage(this.damage);
+    }
+  }
+
+  update() {
+    super.update();
+    this.poisonArea.update(this.x, this.y);
+  }
+
+  draw() {
+    super.draw();
+    this.poisonArea.draw();
+  }
+}
+
+export { MeleeEnemy, RangedEnemy, PoisonEnemy };

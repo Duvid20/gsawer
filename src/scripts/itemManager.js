@@ -18,6 +18,14 @@ class ItemManager {
     }
   }
 
+  count(items) {
+    const itemCount = new Map();
+    for (const item of items) {
+      itemCount.set(item.name, (itemCount.get(item.name) || 0) + 1);
+    }
+    return itemCount;
+  }
+
   getDroppedItems() {
     return this.items.filter((item) => !item.inInventory);
   }

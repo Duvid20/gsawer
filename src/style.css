@@ -128,6 +128,18 @@ body {
   transform: translate(-50%, -50%);
 }
 
+#inventory-body {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+#inventory-footer {
+  position: absolute;
+  bottom: 30px;
+  align-self: center;
+}
+
 .inventory-item {
   position: relative;
   border: 1px solid white;

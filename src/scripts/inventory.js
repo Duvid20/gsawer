@@ -16,15 +16,25 @@ class Inventory {
 
   updateInventoryDisplay() {
     this.inventoryBodyElement.innerHTML = "";
-    const items = this.game.itemManager.getInventoryItems();
-    for (const item of items) {
-      if (item.inInventory) {
-        const itemElement = document.createElement("div");
-        itemElement.className = "inventory-item " + item.className;
-        itemElement.innerText = `${item.symbol} x${item.count}`;
-        this.inventoryElement.appendChild(itemElement);
-      }
-    }
+    const itemCount = this.game.itemManager.count(
+      this.game.itemManager.getInventoryItems()
+    );
+
+    itemCount.forEach((count, itemName) => {
+      const item = this.game.itemManager.findItemByName(
+        this.game.itemManager.getInventoryItems(),
+        itemName
+      );
+      const element = this.createInventoryElement(item, count);
+      this.inventoryBodyElement.appendChild(element);
+    });
+  }
+
+  createInventoryElement(item, count) {
+    const element = document.createElement("div");
+    element.className = "inventory-item " + item.className;
+    element.innerText = `${item.symbol} x${count}`;
+    return element;
   }
 
   open() {
